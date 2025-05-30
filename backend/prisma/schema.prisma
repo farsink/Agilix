@@ -1,0 +1,29 @@
+
+generator client {
+  provider = "prisma-client-js"
+ // output   = "../src/generated/prisma"npx prisma generate
+}
+
+// prisma/schema.prisma
+datasource db {
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+  // uncomment next line if you use Prisma <5.10
+  // directUrl = env("DATABASE_URL_UNPOOLED")
+}
+model User {
+  id              String   @id @default(uuid())
+  stackauthUserId String   @unique
+  email           String
+  firstName       String?
+  lastName        String?
+  profileData     Json     @default("{}")
+  fitnessGoals    String[] @default([])
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map(name: "created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map(name: "updated_at")
+  lastLoginAt     DateTime?
+
+  @@index([stackauthUserId], name: "idx_users_stackauth_id")
+  @@index([email], name: "idx_users_email")
+}
