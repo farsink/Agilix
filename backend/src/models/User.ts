@@ -1,35 +1,58 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../config/database_Sql";
 import { HttpStatusCode } from "../types/http";
 
 interface UserCreateInput {
-  stackauth_user_id: string;
+  stackauthUserId: string; // Remove the '?'
   email: string;
-  first_name?: string;
-  last_name?: string;
-  profile_data?: Record<string, unknown>;
-  fitness_goals?: string[];
+  firstName?: string | null;
+  lastName?: string | null;
+  profileData?: Record<string, unknown> | undefined;
+  fitnessGoals?: string[];
 }
 
 class UserModel {
-  async create(userData: UserCreateInput): Promise<UserCreateInput> {
-    return prisma.user.create({ data: userData });
-  }
-
-  async findByStackAuthId(
-    stackauth_user_id: string
-  ): Promise<UserCreateInput | null> {
-    return prisma.user.findUnique({
-      where: { stackauth_user_id },
+  async create(userData: UserCreateInput) {
+    return prisma.user.create({
+      data: {
+        ...userData,
+        profileData: userData.profileData as Prisma.InputJsonValue, // Cast here
+      },
     });
   }
 
-  async updateProfile(
-    userId: string,
-    updateData: Partial<UserCreateInput>
-  ): Promise<UserCreateInput> {
+  async findByStackAuthId(stackauthUserId: string) {
+    return prisma.user.findUnique({
+      where: { stackauthUserId },
+    });
+  }
+
+  async updateProfile(userId: string, updateData: Partial<UserCreateInput>) {
+    if (!updateData.email) {
+      throw new Error("Email is required to update profile");
+    }
+    const userData: UserCreateInput = {
+      stackauthUserId: updateData.stackauthUserId || "",
+      email: updateData.email, // Ensure email is present
+      firstName: updateData.firstName ?? null,
+      lastName: updateData.lastName ?? null,
+      profileData: updateData.profileData
+        ? JSON.parse(JSON.stringify(updateData.profileData))
+        : undefined,
+      fitnessGoals: updateData.fitnessGoals,
+    };
     return prisma.user.update({
       where: { id: userId },
-      data: updateData,
+      data: {
+        stackauthUserId: updateData.stackauthUserId || "",
+        email: updateData.email,
+        firstName: updateData.firstName ?? null,
+        lastName: updateData.lastName ?? null,
+        profileData: updateData.profileData
+          ? (updateData.profileData as Prisma.InputJsonValue)
+          : undefined,
+        fitnessGoals: updateData.fitnessGoals,
+      },
     });
   }
 }

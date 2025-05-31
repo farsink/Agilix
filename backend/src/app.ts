@@ -1,17 +1,21 @@
 import express, { Request, Response } from "express";
-
-// Import your routes and middleware here
-// import userRoutes from "./routes/userRoutes";
-// import securityMiddleware from "./middleware/security";
+import webhookStackAuth from "./api/webhooks/stack-auth";
+import morgan from "morgan";
+import helmet from "helmet";
 
 const app = express();
-
+// Logging middleware
+app.use(morgan("dev"));
 // Middleware
-app.use(express.json());
-// app.use(securityMiddleware);
+app.use(helmet()); // Security middleware
 
-// Routes
-// app.use("/users", userRoutes);
+// app.use(securityMiddleware);
+app.use("/api/webhooks/stack-auth", webhookStackAuth);
+
+app.use(express.json());
+
+
+
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running and database is connected!");
