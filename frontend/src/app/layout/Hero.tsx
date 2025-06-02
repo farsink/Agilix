@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Play } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface imagedatatype {
   src: string;
@@ -48,6 +49,7 @@ const imagedata: imagedatatype[] = [
 
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useRouter();
 
   useEffect(() => {
     setIsVisible(true);
@@ -84,6 +86,7 @@ export default function HeroSection() {
               <Button
                 size='lg'
                 className='bg-[#ea8455] hover:bg-[#ff6b2b] text-white rounded-full px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg w-full sm:w-auto'
+                onClick={() => navigate.push("/handler/sign-up")}
               >
                 Get Started
               </Button>

@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeItem, setActiveItem] = useState("home");
+  const navigate = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,6 +71,7 @@ export default function Header() {
           variant='outline'
           size='sm'
           className='border-[#ea8455] border-1 text-[#ea8455] hover:bg-[#ea8455] hover:text-white rounded-full px-6 mr-10 p-4'
+          onClick={() => navigate.push("/handler/sign-up")}
         >
           Start Free Trial
         </Button>

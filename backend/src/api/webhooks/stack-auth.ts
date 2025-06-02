@@ -3,6 +3,7 @@ import rateLimit from "express-rate-limit";
 import { PrismaClient } from "@prisma/client";
 import { Webhook } from "svix";
 import { json } from "stream/consumers";
+import { createUserProfileIfNotExists } from "../../services/mongoUser.service";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -38,6 +39,8 @@ router.post(
 
     const wh = new Webhook(process.env.SVIX_WEBHOOK_SIGNING_SECRET as string);
 
+
+
     try {
       const payload = wh.verify(rawBody, {
         "svix-id": headers["svix-id"] as string,
@@ -49,7 +52,7 @@ router.post(
 
       try {
         if (type === "user.created" || type === "user.updated") {
-          await prisma.user.upsert({
+          const user = await prisma.user.upsert({
             where: { stackauthUserId: data.id },
             update: {
               email: data.primary_email,
@@ -57,6 +60,7 @@ router.post(
               lastName:
                 data.display_name?.split(" ").slice(1).join(" ") || null,
               profileData: data.server_metadata || {},
+              isVerified: data.primary_email_verified,
             },
             create: {
               stackauthUserId: data.id,
@@ -65,8 +69,11 @@ router.post(
               lastName:
                 data.display_name?.split(" ").slice(1).join(" ") || null,
               profileData: data.server_metadata || {},
+              isVerified: data.primary_email_verified,
             },
           });
+
+          await createUserProfileIfNotExists(user, data.id);
 
           console.log(
             `User ${data.id} ${type === "user.created" ? "created" : "updated"}`

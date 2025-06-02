@@ -9,6 +9,7 @@ interface UserCreateInput {
   lastName?: string | null;
   profileData?: Record<string, unknown> | undefined;
   fitnessGoals?: string[];
+  isVerified?: boolean;
 }
 
 class UserModel {
@@ -16,7 +17,8 @@ class UserModel {
     return prisma.user.create({
       data: {
         ...userData,
-        profileData: userData.profileData as Prisma.InputJsonValue, // Cast here
+        profileData: userData.profileData as Prisma.InputJsonValue,
+        isVerified: userData.isVerified ?? false, // Cast here
       },
     });
   }
@@ -40,6 +42,7 @@ class UserModel {
         ? JSON.parse(JSON.stringify(updateData.profileData))
         : undefined,
       fitnessGoals: updateData.fitnessGoals,
+      isVerified: updateData.isVerified,
     };
     return prisma.user.update({
       where: { id: userId },
@@ -52,6 +55,7 @@ class UserModel {
           ? (updateData.profileData as Prisma.InputJsonValue)
           : undefined,
         fitnessGoals: updateData.fitnessGoals,
+        isVerified: updateData.isVerified,
       },
     });
   }

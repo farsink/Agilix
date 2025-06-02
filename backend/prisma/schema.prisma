@@ -20,6 +20,7 @@ model User {
   profileData     Json     @default("{}")
   fitnessGoals    String[] @default([])
   isActive        Boolean  @default(true)
+  isVerified        Boolean  @default(false) 
   createdAt       DateTime @default(now()) @map(name: "created_at")
   updatedAt       DateTime @default(now()) @updatedAt @map(name: "updated_at")
   lastLoginAt     DateTime?
