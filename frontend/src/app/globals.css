@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin 'tailwind-scrollbar';
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -110,6 +112,23 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f3f4f6; /* Tailwind's gray-100 */
+}
+::-webkit-scrollbar-thumb {
+  background-color: #f97316; /* Tailwind's orange-500 */
+  border-radius: 8px;
+  border: 2px solid #f3f4f6;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #f97316 #f3f4f6;
 }
 
 @layer base {

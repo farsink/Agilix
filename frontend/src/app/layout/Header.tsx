@@ -5,7 +5,11 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-export default function Header() {
+export default function Header({
+  userRegister = false,
+}: {
+  userRegister?: boolean;
+}) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeItem, setActiveItem] = useState("home");
   const navigate = useRouter();
@@ -43,38 +47,50 @@ export default function Header() {
           <span className='font-bold text-xl font-sans'>Agilix</span>
         </div>
 
-        <nav className='absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center space-x-12'>
-          {[
-            { name: "Home", href: "#home" },
-            { name: "Feature", href: "#feature" },
-            { name: "Process", href: "#Howitworks" },
-            { name: "Pricing", href: "#pricing" },
-            { name: "Download", href: "#download" },
-          ].map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              onClick={() => setActiveItem(item.href.substring(1))}
-              className={cn(
-                "text-sm font-medium relative py-2 transition-all duration-300 ease-in-out",
-                activeItem === item.href.substring(1)
-                  ? "text-foreground after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#ea8455] after:transform after:perspective-[100px] after:rotateX-[45deg] after:transition-all after:duration-300 after:ease-in-out after:opacity-100"
-                  : "text-muted-foreground hover:text-foreground after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#ea8455] after:transform after:perspective-[100px] after:rotateX-[45deg] after:transition-all after:duration-300 after:ease-in-out after:opacity-0"
-              )}
-            >
-              {item.name}
-            </a>
-          ))}
-        </nav>
+        {!userRegister && (
+          <nav className='absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center space-x-12'>
+            {[
+              { name: "Home", href: "#home" },
+              { name: "Feature", href: "#feature" },
+              { name: "Process", href: "#Howitworks" },
+              { name: "Pricing", href: "#pricing" },
+              { name: "Download", href: "#download" },
+            ].map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={() => setActiveItem(item.href.substring(1))}
+                className={cn(
+                  "text-sm font-medium relative py-2 transition-all duration-300 ease-in-out",
+                  activeItem === item.href.substring(1)
+                    ? "text-foreground after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#ea8455] after:transform after:perspective-[100px] after:rotateX-[45deg] after:transition-all after:duration-300 after:ease-in-out after:opacity-100"
+                    : "text-muted-foreground hover:text-foreground after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#ea8455] after:transform after:perspective-[100px] after:rotateX-[45deg] after:transition-all after:duration-300 after:ease-in-out after:opacity-0"
+                )}
+              >
+                {item.name}
+              </a>
+            ))}
+          </nav>
+        )}
 
-        <Button
-          variant='outline'
-          size='sm'
-          className='border-[#ea8455] border-1 text-[#ea8455] hover:bg-[#ea8455] hover:text-white rounded-full px-6 mr-10 p-4'
-          onClick={() => navigate.push("/handler/sign-up")}
-        >
-          Start Free Trial
-        </Button>
+        {!userRegister ? (
+          <Button
+            variant='outline'
+            size='sm'
+            className='border-[#ea8455] border-1 text-[#ea8455] hover:bg-[#ea8455] hover:text-white rounded-full px-6 mr-10 p-4'
+            onClick={() => navigate.push("/handler/sign-up")}
+          >
+            Start Free Trial
+          </Button>
+        ) : (
+          <Button
+            variant='ghost'
+            onClick={() => navigate.push("/dashboard")}
+            className='relative text-sm sm:text-md font-medium text-gray-500 hover:text-gray-700 hover:border-[#ea8455] hover:border-1  mr-10 p-4'
+          >
+            Skip
+          </Button>
+        )}
       </div>
     </header>
   );

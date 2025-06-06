@@ -15,19 +15,38 @@ const Container = ({ children }: { children: React.ReactNode }) => {
     </div>
   )
 }
+import { stackServerApp } from '@/stack'
+import { UserButton } from '@stackframe/stack'
 import { 
   BarChart,
   Activity,
   Calendar,
-  ListChecks
+  ListChecks,
+  LogOut
 } from 'lucide-react'
+const handlelogout = () => {
+ 
+  window.location.href = '/'
+}
 
 export default function Dashboard() {
   return (
     <Container>
       <div className="py-6">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-        
+        <h2 className="text-2xl font-bold mb-4">Dashboard</h2>  
+
+        <button className='bg-primary text-white py-2 px-4 rounded flex items-end' onClick={handlelogout}>logout</button>
+    
+        <UserButton
+        showUserInfo={true}
+        colorModeToggle={() => { console.log("color mode toggle clicked") }}
+        extraItems={[{
+          text: 'Custom Action',
+          icon: <LogOut />,
+          onClick: () => console.log('Custom action clicked')
+        }]}
+
+      />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Card className="p-4">
             <div className="flex items-center gap-2">

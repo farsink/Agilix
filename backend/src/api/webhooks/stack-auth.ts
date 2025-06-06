@@ -39,8 +39,6 @@ router.post(
 
     const wh = new Webhook(process.env.SVIX_WEBHOOK_SIGNING_SECRET as string);
 
-
-
     try {
       const payload = wh.verify(rawBody, {
         "svix-id": headers["svix-id"] as string,

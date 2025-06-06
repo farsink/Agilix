@@ -21,18 +21,18 @@ export const metadata: Metadata = {
     icon: [
       { url: "/favicon.ico" },
       { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
-      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" }
+      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
     other: [
       {
         rel: "mask-icon",
         url: "/logo_agilix.png",
-        color: "#8B5CF6"
-      }
-    ]
+        color: "#8B5CF6",
+      },
+    ],
   },
   manifest: "/manifest.json",
 };
@@ -46,9 +46,11 @@ export default function RootLayout({
     <html lang='en'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      ><StackProvider app={stackServerApp}><StackTheme>
-        {children}
-      </StackTheme></StackProvider></body>
+      >
+        <StackProvider app={stackServerApp}>
+          <StackTheme>{children}</StackTheme>
+        </StackProvider>
+      </body>
     </html>
   );
 }

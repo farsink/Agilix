@@ -1,14 +1,14 @@
 import prisma, { testConnection } from "./src/config/database_Sql";
 import app from "./src/app";
 import { connectMongoDB } from "./src/config/Mongodb";
-const PORT = 3000;
+
 
 async function startServer() {
   await testConnection();
   await connectMongoDB();
 
-  app.listen(PORT, () => {
-    console.log(`  Server listening on http://localhost:${PORT}`);
+  app.listen(4000, () => {
+    console.log(`  Server listening on http://localhost:4000`);
   });
 }
 

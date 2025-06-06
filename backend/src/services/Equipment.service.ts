@@ -35,7 +35,25 @@ export const createEquipment = async (
     throw new Error("Failed to create equipment");
   }
 };
-
+export const getEquipment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const equipment = await Equipment.find();
+    if (!equipment) {
+      res.status(404).json({ message: "Equipment not found" });
+      return;
+    }
+    res.status(200).json(equipment);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
 export const deleteEquipment = async (
   req: Request,
   res: Response

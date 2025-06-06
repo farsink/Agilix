@@ -8,6 +8,7 @@ export const stackServerApp = new StackServerApp({
   // Add your app routes here
   urls: {
     afterSignIn: "/dashboard",
-    signIn: "/dashboard",
+    afterSignUp :"/UserRegistered",
+
   },
 });

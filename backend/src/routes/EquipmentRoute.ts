@@ -5,12 +5,15 @@ import {
   createMultiple,
   deleteEquipment,
   dropallEquipment,
+  getEquipment,
   updateEquipment,
 } from "../services/Equipment.service";
 
 const router = express.Router();
 
 router.post("/add", createEquipment);
+
+router.get("/list", getEquipment);
 
 router.delete("/delete/:id", deleteEquipment);
 
