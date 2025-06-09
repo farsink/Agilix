@@ -37,16 +37,7 @@ export default function Dashboard() {
 
         <button className='bg-primary text-white py-2 px-4 rounded flex items-end' onClick={handlelogout}>logout</button>
     
-        <UserButton
-        showUserInfo={true}
-        colorModeToggle={() => { console.log("color mode toggle clicked") }}
-        extraItems={[{
-          text: 'Custom Action',
-          icon: <LogOut />,
-          onClick: () => console.log('Custom action clicked')
-        }]}
-
-      />
+      
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Card className="p-4">
             <div className="flex items-center gap-2">

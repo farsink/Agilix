@@ -3,7 +3,6 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Index from "./Pages/Index";
 import PhysicalInfo from "./Pages/PhysicalInfo";
-import NotFound from "./Pages/NotFound";
 import FitnessLevel from "./Pages/FitnessLevel";
 import WorkoutPreferences from "./Pages/WorkoutPreferences";
 import EquipmentSpace from "./Pages/EquipmentSpace";

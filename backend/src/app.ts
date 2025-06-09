@@ -4,6 +4,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import EquipmentRoute from "./routes/EquipmentRoute";
 import cors from "cors";
+import UserRoute from "./routes/Userroutes";
 
 const app = express();
 // Logging middleware
@@ -13,7 +14,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "x-csrf-token"],
-    exposedHeaders: ["*", "Authorization"]
+    exposedHeaders: ["*", "Authorization"],
   })
 );
 app.use(morgan("dev"));
@@ -28,12 +29,11 @@ app.use(express.json());
 // Routes For Equipments
 app.use("/api/v1/equipments", EquipmentRoute);
 
-
+// Routes for users
+app.use("/api/v1/user", UserRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running on port 4000");
 });
-
-
 
 export default app;

@@ -4,6 +4,8 @@ import api from "./Axios";
 export const fetchEquipment = async () => {
   try {
     const response = await api.get("/equipments/list");
+    // console.log("Response data:", response.data);
+    
     return response.data;
   } catch (error) {
     console.error("Error fetching equipment:", error);

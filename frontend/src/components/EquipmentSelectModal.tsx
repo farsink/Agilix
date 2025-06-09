@@ -20,7 +20,7 @@ import {
 import { useEquipment } from "@/hooks/useEquipment";
 
 interface Equipment {
-  id: string;
+  _id: string;
   name: string;
   category: "cardio" | "strength" | "flexibility" | "functional" | "bodyweight";
   subcategory?: string;
@@ -54,6 +54,9 @@ const EquipmentSelectionModal: React.FC<EquipmentSelectionModalProps> = ({
 
   const { data: equipmentData, isLoading, isError, error } = useEquipment();
 
+  
+  
+
   useEffect(() => {
     setLocalSelectedEquipment(selectedEquipment);
   }, [selectedEquipment]);
@@ -61,6 +64,7 @@ const EquipmentSelectionModal: React.FC<EquipmentSelectionModalProps> = ({
   // Filter equipment based on type (basic vs full)
   const getFilteredEquipment = () => {
     let equipment = equipmentData || [];
+    
 
     // Filter by equipment type
     if (equipmentType === "basic") {
@@ -178,11 +182,11 @@ const EquipmentSelectionModal: React.FC<EquipmentSelectionModalProps> = ({
             ) : (
               filteredEquipment.map((equipment: Equipment) => (
                 <div
-                  key={equipment.id}
+                  key={equipment._id}
                   className='flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors'
                 >
                   <Checkbox
-                    id={equipment.id}
+                    id={equipment._id}
                     checked={localSelectedEquipment.includes(equipment.name)}
                     onCheckedChange={() =>
                       handleEquipmentToggle(equipment.name)
@@ -192,7 +196,7 @@ const EquipmentSelectionModal: React.FC<EquipmentSelectionModalProps> = ({
                   <div className='flex-1 min-w-0'>
                     <div className='flex items-center justify-between'>
                       <label
-                        htmlFor={equipment.id}
+                        htmlFor={equipment._id}
                         className='font-medium text-gray-900 cursor-pointer'
                       >
                         {equipment.name}

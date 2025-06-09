@@ -3,15 +3,15 @@ import prisma from "../config/database_Sql";
 import { HttpStatusCode } from "../types/http";
 
 interface UserCreateInput {
-  stackauthUserId: string; // Remove the '?'
+  stackauthUserId: string;
   email: string;
   firstName?: string | null;
   lastName?: string | null;
   profileData?: Record<string, unknown> | undefined;
   fitnessGoals?: string[];
   isVerified?: boolean;
+  isRegistered?: boolean; // Add this field
 }
-
 class UserModel {
   async create(userData: UserCreateInput) {
     return prisma.user.create({
@@ -19,6 +19,7 @@ class UserModel {
         ...userData,
         profileData: userData.profileData as Prisma.InputJsonValue,
         isVerified: userData.isVerified ?? false, // Cast here
+        isRegistered: userData.isRegistered ?? false,
       },
     });
   }
