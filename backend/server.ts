@@ -9,7 +9,7 @@ async function startServer() {
   await connectMongoDB();
 
   app.listen(PORT, () => {
-    console.log(`  Server listening on http://localhost:4000`);
+    console.log(`Server listening on http://localhost:${PORT}`);
   });
 }
 

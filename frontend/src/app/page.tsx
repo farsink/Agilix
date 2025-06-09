@@ -1,6 +1,8 @@
-import HowWeDoIt from "./Components/HowWeDo";
+"use client";
+import HowWeDoIt from "./layout/HowWeDo";
 import Header from "./layout/Header";
 import HeroSection from "./layout/Hero";
+import PricingSection from "./layout/PriceSection";
 
 export default function Home() {
   return (
@@ -10,6 +12,7 @@ export default function Home() {
         <main className='flex-grow'>
           <HeroSection />
           <HowWeDoIt />
+          <PricingSection />
         </main>
       </div>
     </>

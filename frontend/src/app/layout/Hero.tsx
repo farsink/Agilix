@@ -56,7 +56,10 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className='relative bg-gradient-to-br from-[#fff2ec] via-white to-white pt-24 lg:pt-32 pb-16 lg:pb-20 overflow-hidden'>
+    <section
+      className='relative bg-gradient-to-br from-[#fff2ec] via-white to-white pt-24 lg:pt-32 pb-16 lg:pb-20 overflow-hidden'
+      id='home'
+    >
       <div className='container px-4 lg:px-8'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center'>
           <div

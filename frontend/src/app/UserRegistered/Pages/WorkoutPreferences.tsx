@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Slider } from "@/components/ui/slider";
@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 
 import ProgressIndicator from "@/components/ProgressIndicator";
 import FitnessCard from "@/components/FitnessCard";
+
 
 interface WorkoutLocation {
   id: string;
@@ -44,6 +45,21 @@ const WorkoutPreferences = () => {
   const [sessionDuration, setSessionDuration] = useState<string>("");
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
+  useEffect(() => {
+    const parseWorkoutPreferences = () => {
+      const workoutPreferences = sessionStorage.getItem("workoutPreferences");
+      if (workoutPreferences) {
+        const parsedPreferences = JSON.parse(workoutPreferences);
+        setWorkoutTime(parsedPreferences.workoutTime);
+        setDaysPerWeek([parsedPreferences.daysPerWeek]);
+        setSessionDuration(parsedPreferences.sessionDuration);
+        setSelectedLocations(parsedPreferences.locations);
+      }
+    };
+
+    parseWorkoutPreferences();
+  }, []);
+
   const handleBack = () => {
     navigate("/fitness-level");
   };
@@ -75,6 +91,11 @@ const WorkoutPreferences = () => {
     };
 
     console.log("Workout preferences:", preferencesData);
+
+    sessionStorage.setItem(
+      "workoutPreferences",
+      JSON.stringify(preferencesData)
+    );
 
     toast({
       title: "Preferences saved!",

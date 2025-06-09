@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,7 +19,25 @@ const EquipmentSpace = () => {
   const [showEquipmentDetails, setShowEquipmentDetails] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
+  useEffect(() => {
+    const equipmentData = sessionStorage.getItem("equipmentData");
+    console.log("Retrieved equipment data:", equipmentData);
 
+    if (equipmentData) {
+      const parsedData = JSON.parse(equipmentData);
+      setSpaceSize(parsedData.spaceSize);
+      setNoiseRestrictions(parsedData.constraints.noiseRestrictions);
+      setLimitedTimeSlots(parsedData.constraints.limitedTimeSlots);
+      setEquipmentLevel(parsedData.equipmentLevel);
+      setSelectedEquipment(parsedData.selectedEquipment);
+      if (
+        parsedData.equipmentLevel === "basic" ||
+        parsedData.equipmentLevel === "full"
+      ) {
+        setShowEquipmentDetails(true);
+      }
+    }
+  }, []);
   const handleBack = () => {
     navigate("/workout-preferences");
   };
@@ -61,6 +79,9 @@ const EquipmentSpace = () => {
     };
 
     console.log("Equipment and space assessment:", equipmentData);
+    if (equipmentData !== null) {
+      sessionStorage.setItem("equipmentData", JSON.stringify(equipmentData));
+    }
 
     // Navigate to health & safety page
     navigate("/health-safety");

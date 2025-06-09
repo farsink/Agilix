@@ -20,6 +20,9 @@ export default function UserRegisteredLayout({
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const userId = useUser()?.id;
+  if (userId !== undefined) {
+    sessionStorage.setItem("userStackId", userId);
+  }
 
   useEffect(() => {
     const isRegistered = async () => {
@@ -29,7 +32,12 @@ export default function UserRegisteredLayout({
         console.log(res);
 
         if (res.success && res.isRegistered) {
-        } else {
+          setLoading(false);
+          router.push("/dashboard");
+          return;
+        } else if (res.success && !res.isRegistered) {
+          setLoading(false);
+        } else if (!res.success && !res.isRegistered) {
           toast({
             title: res.message,
             description: "Please try again later.",

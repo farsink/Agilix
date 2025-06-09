@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Hospital, Lightbulb } from "lucide-react";
 
 import ProgressIndicator from "@/components/ProgressIndicator";
+import api from "@/Services/api/Axios";
 
 const HealthSafety = () => {
   const navigate = useNavigate();
@@ -30,6 +31,15 @@ const HealthSafety = () => {
     { id: "none", label: "None" },
   ];
 
+  useEffect(() => {
+    const storedHealthData = sessionStorage.getItem("healthData");
+    if (storedHealthData) {
+      const parsedHealthData = JSON.parse(storedHealthData);
+      setInjuries(parsedHealthData.injuries);
+      setMedicalConditions(parsedHealthData.medicalConditions);
+    }
+  }, []);
+
   const handleBack = () => {
     navigate("/equipment-space");
   };
@@ -51,6 +61,58 @@ const HealthSafety = () => {
     }
   };
 
+  const SentProfileData = async () => {
+    try {
+      // Retrieve data from sessionStorage
+      const equipmentData = JSON.parse(
+        sessionStorage.getItem("equipmentData") || "{}"
+      );
+      const fitnessInfo = JSON.parse(
+        sessionStorage.getItem("fitnessInfo") || "{}"
+      );
+      const healthData = JSON.parse(
+        sessionStorage.getItem("healthData") || "{}"
+      );
+      const physicalInfo = JSON.parse(
+        sessionStorage.getItem("physicalInfo") || "{}"
+      );
+      const selectedGoal = sessionStorage.getItem("selectedGoal") || "";
+      const secondaryGoals = sessionStorage.getItem("secondaryGoals") || "";
+      const workoutPreferences = JSON.parse(
+        sessionStorage.getItem("workoutPreferences") || "{}"
+      );
+
+      // Retrieve userStackId (assuming it's stored in sessionStorage)
+      const userStackId = sessionStorage.getItem("userStackId");
+
+      if (!userStackId) {
+        console.error("User Stack ID is missing");
+        return;
+      }
+
+      // Create FormData object
+      const formData = new FormData();
+      formData.append("userStackId", userStackId);
+      formData.append("equipmentData", JSON.stringify(equipmentData));
+      formData.append("fitnessInfo", JSON.stringify(fitnessInfo));
+      formData.append("healthData", JSON.stringify(healthData));
+      formData.append("physicalInfo", JSON.stringify(physicalInfo));
+      formData.append("selectedGoal", selectedGoal);
+      formData.append("secondaryGoals", secondaryGoals);
+      formData.append("workoutPreferences", JSON.stringify(workoutPreferences));
+
+      // Send data to the server
+      const response = await api.post("/user/profile/setup", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure correct content type
+        },
+      });
+
+      console.log("Data sent successfully:", response.data);
+    } catch (error) {
+      console.error("Error sending profile data:", error);
+    }
+  };
   const handleMedicalChange = (conditionId: string, checked: boolean) => {
     if (conditionId === "none") {
       setMedicalConditions(checked ? ["none"] : []);
@@ -84,6 +146,11 @@ const HealthSafety = () => {
     };
 
     console.log("Health & Safety information:", healthData);
+    if (healthData !== null) {
+      sessionStorage.setItem("healthData", JSON.stringify(healthData));
+    }
+
+    SentProfileData();
     navigate("/completion");
   };
 

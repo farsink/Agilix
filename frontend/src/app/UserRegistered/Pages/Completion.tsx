@@ -7,8 +7,44 @@ import { Camera, Settings, Sparkles } from "lucide-react";
 const Completion = () => {
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
+  const [progressData, setProgressData] = useState<{
+    goal: string;
+    level: string;
+    schedule: string;
+    location: string;
+  }>({
+    goal: "",
+    level: "",
+    schedule: "",
+    location: "",
+  });
+
+  const ParseprogressData = () => {
+    const storedGoal = sessionStorage
+      .getItem("selectedGoal")
+      ?.replace(/\b\w/g, (c) => c.toUpperCase())
+      .replace(/-(?=[a-z])/g, " ");
+    const storedLevel = JSON.parse(
+      sessionStorage.getItem("fitnessInfo") || "{}"
+    ).fitnessLevel;
+    const storedSchedule = JSON.parse(
+      sessionStorage.getItem("workoutPreferences") || "{}"
+    ).daysPerWeek;
+
+    const storedLocation = JSON.parse(
+      sessionStorage.getItem("workoutPreferences") || "{}"
+    ).locations.join(" + ");
+
+    setProgressData({
+      goal: storedGoal || "",
+      level: storedLevel || "",
+      schedule: storedSchedule || "",
+      location: storedLocation || "",
+    });
+  };
 
   useEffect(() => {
+    ParseprogressData();
     const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -18,13 +54,14 @@ const Completion = () => {
         return prev + 5;
       });
     }, 200);
-
     return () => clearInterval(timer);
   }, []);
 
   const handleStartJourney = () => {
-    navigate("/");
+    ParseprogressData();
   };
+       
+  
 
   return (
     <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white sm:mt-0 mt-10'>
@@ -39,7 +76,7 @@ const Completion = () => {
               </h1>
             </div>
             <p className='text-gray-600'>
-              We&epos;re creating your personalized fitness plan
+              We&apos;re creating your personalized fitness plan
             </p>
           </div>
 
@@ -51,19 +88,25 @@ const Completion = () => {
             <div className='space-y-3'>
               <div className='flex justify-between'>
                 <span className='text-gray-600'>Goal</span>
-                <span className='font-medium text-gray-800'>Build Muscle</span>
+                <span className='font-medium text-gray-800'>
+                  {progressData.goal}
+                </span>
               </div>
               <div className='flex justify-between'>
                 <span className='text-gray-600'>Level</span>
-                <span className='font-medium text-gray-800'>Intermediate</span>
+                <span className='font-medium text-gray-800'>
+                  {progressData.level}
+                </span>
               </div>
               <div className='flex justify-between'>
                 <span className='text-gray-600'>Schedule</span>
-                <span className='font-medium text-gray-800'>4x/week</span>
+                <span className='font-medium text-gray-800'>{`${progressData.schedule}x/week`}</span>
               </div>
               <div className='flex justify-between'>
                 <span className='text-gray-600'>Location</span>
-                <span className='font-medium text-gray-800'>Home + Gym</span>
+                <span className='font-medium text-gray-800'>
+                  {progressData.location}
+                </span>
               </div>
             </div>
           </div>
@@ -90,6 +133,7 @@ const Completion = () => {
             </Button>
             <Button
               variant='outline'
+              onClick={() => navigate("/userRegister")}
               className='flex items-center justify-center gap-2 py-3 border-gray-200 hover:border-orange-300'
             >
               <Settings className='h-4 w-4' />

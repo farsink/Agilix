@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -71,7 +71,18 @@ const FitnessLevel = () => {
   const [selectedActivityLevel, setSelectedActivityLevel] = useState<
     string | null
   >(null);
+  useEffect(() => {
+    const parseFitnessInfo = () => {
+      const storedInfo = sessionStorage.getItem("fitnessInfo");
+      if (storedInfo) {
+        const fitnessInfo = JSON.parse(storedInfo);
+        setSelectedFitnessLevel(fitnessInfo.fitnessLevel);
+        setSelectedActivityLevel(fitnessInfo.activityLevel);
+      }
+    };
 
+    parseFitnessInfo();
+  }, []);
   const handleBack = () => {
     navigate("/physical-info");
   };
@@ -96,6 +107,15 @@ const FitnessLevel = () => {
 
     console.log("Fitness experience:", selectedFitnessData?.title);
     console.log("Activity level:", selectedActivityData?.title);
+
+    if (selectedFitnessData && selectedActivityData) {
+      const fitnessInfo = {
+        fitnessLevel: selectedFitnessData?.id,
+        activityLevel: selectedActivityData?.id,
+      };
+
+      sessionStorage.setItem("fitnessInfo", JSON.stringify(fitnessInfo));
+    }
 
     toast({
       title: "Fitness information saved!",

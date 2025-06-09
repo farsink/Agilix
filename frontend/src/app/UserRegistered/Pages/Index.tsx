@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -50,7 +50,19 @@ const Index = () => {
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
   const [showSecondaryGoals, setShowSecondaryGoals] = useState(false);
   const [secondaryGoals, setSecondaryGoals] = useState<string[]>([]);
+  useEffect(() => {
+    const selectedGoal = sessionStorage.getItem("selectedGoal");
+    const secondaryGoals = sessionStorage.getItem("secondaryGoals");
+    console.log(selectedGoal, secondaryGoals);
 
+    if (selectedGoal) {
+      setSelectedGoal(selectedGoal);
+    }
+    if (secondaryGoals) {
+      setSecondaryGoals(secondaryGoals.split(", ").slice());
+      setShowSecondaryGoals(true);
+    }
+  }, []);
   const handleGoalSelect = (goalId: string) => {
     setSelectedGoal(goalId);
 
@@ -82,11 +94,21 @@ const Index = () => {
 
     const selectedGoalData = goals.find((goal) => goal.id === selectedGoal);
     const secondaryGoalData = secondaryGoals
-      .map((id) => goals.find((goal) => goal.id === id)?.title)
+      .map((id) => goals.find((goal) => goal.id === id)?.id)
       .filter(Boolean);
 
     console.log("Selected goal:", selectedGoalData?.title);
     console.log("Secondary goals:", secondaryGoalData);
+
+    if (selectedGoalData) {
+      sessionStorage.setItem("selectedGoal", selectedGoalData?.id);
+
+      if (secondaryGoalData.length > 0) {
+        sessionStorage.setItem("secondaryGoals", secondaryGoalData.join(", "));
+      } else {
+        sessionStorage.removeItem("secondaryGoals");
+      }
+    }
 
     toast({
       title: "Goal selected!",
@@ -139,6 +161,7 @@ const Index = () => {
                   .map((goal) => (
                     <div
                       key={goal.id}
+                      
                       className='flex items-center space-x-3 p-2 rounded cursor-pointer hover:bg-orange-100'
                       onClick={() => handleSecondaryGoalToggle(goal.id)}
                     >

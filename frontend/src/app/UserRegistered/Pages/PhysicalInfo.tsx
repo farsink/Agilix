@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -6,6 +6,7 @@ import { toast } from "@/hooks/use-toast";
 import ProgressIndicator from "@/components/ProgressIndicator";
 import { Minus, Plus, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 
 const PhysicalInfo = () => {
   const navigate = useNavigate();
@@ -15,6 +16,23 @@ const PhysicalInfo = () => {
   const [heightUnit, setHeightUnit] = useState("imperial"); // imperial or metric
   const [weightUnit, setWeightUnit] = useState("imperial"); // imperial or metric
   const [gender, setGender] = useState("");
+
+  useEffect(() => {
+    const parsePhysicalInfo = () => {
+      const storedPhysicalInfo = sessionStorage.getItem("physicalInfo");
+      if (storedPhysicalInfo) {
+        const parsedPhysicalInfo = JSON.parse(storedPhysicalInfo);
+        setAge(parsedPhysicalInfo.age);
+        setHeight([parsedPhysicalInfo.height]);
+        setWeight([parsedPhysicalInfo.weight]);
+        setHeightUnit(parsedPhysicalInfo.heightUnit);
+        setWeightUnit(parsedPhysicalInfo.weightUnit);
+        setGender(parsedPhysicalInfo.gender);
+      }
+    };
+
+    parsePhysicalInfo();
+  }, []);
 
   const handleAgeChange = (increment: boolean) => {
     setAge((prev) => {
@@ -87,6 +105,8 @@ const PhysicalInfo = () => {
     };
 
     console.log("Physical information:", physicalData);
+
+    sessionStorage.setItem("physicalInfo", JSON.stringify(physicalData));
 
     toast({
       title: "Information saved!",
