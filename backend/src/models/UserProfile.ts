@@ -41,7 +41,7 @@ interface IUserProfile extends Document {
   // Equipment & Environment
   equipment: {
     hasGym: boolean;
-    homeEquipment: Types.ObjectId[]; // References to Equipment collection
+    homeEquipment: string[]; // References to Equipment collection
     preferredWorkoutSpace: "home" | "gym" | "outdoor" | "mixed";
     spaceConstraints?: {
       size: "small" | "medium" | "large";
@@ -140,7 +140,7 @@ const userProfileSchema = new Schema<IUserProfile>(
 
     equipment: {
       hasGym: { type: Boolean, default: false },
-      homeEquipment: [{ type: Schema.Types.ObjectId, ref: "Equipment" }],
+      homeEquipment: [{ type: String }],
       preferredWorkoutSpace: {
         type: String,
         enum: ["home", "gym", "outdoor", "mixed"],

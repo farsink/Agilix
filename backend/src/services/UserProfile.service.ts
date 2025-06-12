@@ -28,7 +28,13 @@ export class UserProfileService {
         // Update existing user profile
         existingProfile.set({
           equipment: {
-            preferredWorkoutSpace: parsedEquipmentData.spaceSize,
+            preferredWorkoutSpace:
+              parsedWorkoutPreferences.locations &&
+              parsedWorkoutPreferences.locations.length > 0
+                ? parsedWorkoutPreferences.locations.length > 1
+                  ? "mixed"
+                  : parsedWorkoutPreferences.locations[0]
+                : "home",
             spaceConstraints: {
               size: parsedEquipmentData.spaceSize,
               noiseRestrictions:
@@ -64,7 +70,13 @@ export class UserProfileService {
         const newProfile = new UserProfile({
           stackauthUserId: userStackId,
           equipment: {
-            preferredWorkoutSpace: parsedEquipmentData.spaceSize,
+            preferredWorkoutSpace:
+              parsedWorkoutPreferences.locations &&
+              parsedWorkoutPreferences.locations.length > 0
+                ? parsedWorkoutPreferences.locations.length > 1
+                  ? "mixed"
+                  : parsedWorkoutPreferences.locations[0]
+                : "home",
             spaceConstraints: {
               size: parsedEquipmentData.spaceSize,
               noiseRestrictions:

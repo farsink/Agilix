@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Hospital, Lightbulb } from "lucide-react";
 
 import ProgressIndicator from "@/components/ProgressIndicator";
-import api from "@/Services/api/Axios";
+import { useStackAuthApi } from "@/Services/api/Stackclientapi";
+import { AxiosResponse } from "axios";
 
 const HealthSafety = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const HealthSafety = () => {
   const [otherInjury, setOtherInjury] = useState("");
   const [medicalConditions, setMedicalConditions] = useState<string[]>([]);
   const [otherCondition, setOtherCondition] = useState("");
+  const { api } = useStackAuthApi();
 
   const injuryOptions = [
     { id: "back", label: "Back problems" },
@@ -102,13 +104,11 @@ const HealthSafety = () => {
       formData.append("workoutPreferences", JSON.stringify(workoutPreferences));
 
       // Send data to the server
-      const response = await api.post("/user/profile/setup", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Ensure correct content type
-        },
-      });
-
-      console.log("Data sent successfully:", response.data);
+      const response: AxiosResponse = await api.post(
+        "/user/profile/setup",
+        formData
+      );
+      console.log("Data sent successfully:", response);
     } catch (error) {
       console.error("Error sending profile data:", error);
     }

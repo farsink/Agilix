@@ -26,7 +26,7 @@ router.post(
     },
   }),
   async (req: Request, res: Response) => {
-    console.log(process.env.SVIX_WEBHOOK_SIGNING_SECRET);
+
 
     const rawBody = (req as any).rawBody;
     const body = rawBody.toString();
