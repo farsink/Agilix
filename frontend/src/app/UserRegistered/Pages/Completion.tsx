@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Camera, Settings, Sparkles } from "lucide-react";
 
+import { useWebSocket } from "@/hooks/useWebsocket";
+
 const Completion = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
+  const status = useWebSocket(id || "");
+  const [showFallback, setShowFallback] = useState(false);
   const [progressData, setProgressData] = useState<{
     goal: string;
     level: string;
@@ -19,6 +24,132 @@ const Completion = () => {
     location: "",
   });
 
+  useEffect(() => {
+    if (!id) return;
+
+    let isMounted = true;
+    let retryCount = 0;
+    const MAX_RETRIES = 3;
+    let fallbackInterval: NodeJS.Timeout | null = null;
+
+    const pollStatus = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/v1/user/process-status/${id}`);
+        
+        if (!response.ok) {
+          throw new Error(`API returned status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+
+        if (isMounted) {
+          if (data.status === "COMPLETED") {
+            if (fallbackInterval) clearInterval(fallbackInterval);
+            setProgress(100);
+          }
+
+          // Show fallback UI after successful poll
+          setShowFallback(true);
+          
+          // Reset retry count on success
+          retryCount = 0;
+        }
+      } catch (error) {
+        console.error("Fallback poll failed:", error);
+        
+        if (isMounted) {
+          setShowFallback(true); // Show on error
+          
+          // Increment retry count
+          retryCount++;
+          
+          // Stop polling after max retries
+          if (retryCount >= MAX_RETRIES && fallbackInterval) {
+            console.log(`Stopped polling after ${MAX_RETRIES} failed attempts`);
+            clearInterval(fallbackInterval);
+            
+            // You could set some state here to show a permanent error message
+            // setApiError(true);
+          }
+        }
+      }
+    };
+
+    // Initial poll
+    pollStatus();
+    
+    // Set up interval for subsequent polls
+    fallbackInterval = setInterval(pollStatus, 5000);
+
+    return () => {
+      isMounted = false;
+      if (fallbackInterval) clearInterval(fallbackInterval);
+    };
+  }, [id]);
+  //     try {
+  //       const response = await fetch(
+  //         `/api/v1/user/process-status/${processId}`
+  //       );
+  //       const data = await response.json();
+
+  //       if (data.status === "COMPLETED") {
+  //         clearInterval(fallbackInterval);
+  //       }
+
+  //       // Show fallback UI after first successful poll
+  //       setShowFallback(true);
+  //     } catch (error) {
+  //       console.error("Fallback poll failed:", error);
+  //       setShowFallback(true); // Show on error
+  //     }
+  //   }, 5000);
+
+  //   return () => clearInterval(fallbackInterval);
+  // }, [processId, navigate]);
+  console.log(id);
+
+  // Update progress based on WebSocket status
+  useEffect(() => {
+    if (status) {
+      console.log("WebSocket status update:", status);
+
+      // Update progress based on status
+      if (status.status === "COMPLETED") {
+        setProgress(100);
+      } else if (status.status === "N8N_PROCESSING") {
+        // If the backend provides a progress percentage, use it
+        if (status.progress) {
+          setProgress(status.progress);
+        } else {
+          // Otherwise use the simulated progress
+          const timer = setInterval(() => {
+            setProgress((prev) => {
+              if (prev >= 95) {
+                // Cap at 95% until complete
+                clearInterval(timer);
+                return 95;
+              }
+              return prev + 5;
+            });
+          }, 500);
+          return () => clearInterval(timer);
+        }
+      }
+    } else {
+      // Fallback animation if no status is available yet
+      const timer = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 95) {
+            // Cap at 95% until we get a COMPLETED status
+            clearInterval(timer);
+            return 95;
+          }
+          return prev + 5;
+        });
+      }, 500);
+      return () => clearInterval(timer);
+    }
+  }, [status]);
   const ParseprogressData = () => {
     const storedGoal = sessionStorage
       .getItem("selectedGoal")
@@ -45,23 +176,11 @@ const Completion = () => {
 
   useEffect(() => {
     ParseprogressData();
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(timer);
-          return 100;
-        }
-        return prev + 5;
-      });
-    }, 200);
-    return () => clearInterval(timer);
   }, []);
 
   const handleStartJourney = () => {
     ParseprogressData();
   };
-       
-  
 
   return (
     <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white sm:mt-0 mt-10'>
@@ -115,7 +234,9 @@ const Completion = () => {
           <div className='bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-6'>
             <div className='flex items-center justify-between mb-3'>
               <span className='text-gray-700 font-medium'>
-                Generating your plan...
+                {status?.status === "COMPLETED"
+                  ? "Your plan is ready!"
+                  : "Generating your plan..."}
               </span>
               <span className='text-orange-600 font-semibold'>{progress}%</span>
             </div>

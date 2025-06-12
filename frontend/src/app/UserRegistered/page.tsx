@@ -38,7 +38,7 @@ const UserRegistered: React.FC = () => {
           <Route path='/workout-preferences' element={<WorkoutPreferences />} />
           <Route path='/equipment-space' element={<EquipmentSpace />} />
           <Route path='/health-safety' element={<HealthSafety />} />
-          <Route path='/completion' element={<Completion />} />
+          <Route path='/completion/:id' element={<Completion />} />
 
           <Route path='*' element={<Index />} />
         </Routes>

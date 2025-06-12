@@ -77,27 +77,27 @@ class StackAuthApiClient {
   // Expose axios methods with automatic auth
   async get<T>(url: string, config?: AxiosRequestConfig) {
     const response = await this.axiosInstance.get<T>(url, config);
-    return response.data;
+    return response;
   }
 
   async post<T>(url: string, data?: any, config?: AxiosRequestConfig) {
     const response = await this.axiosInstance.post<T>(url, data, config);
-    return response.data;
+    return response;
   }
 
   async put<T>(url: string, data?: any, config?: AxiosRequestConfig) {
     const response = await this.axiosInstance.put<T>(url, data, config);
-    return response.data;
+    return response;
   }
 
   async patch<T>(url: string, data?: any, config?: AxiosRequestConfig) {
     const response = await this.axiosInstance.patch<T>(url, data, config);
-    return response.data;
+    return response;
   }
 
   async delete<T>(url: string, config?: AxiosRequestConfig) {
     const response = await this.axiosInstance.delete<T>(url, config);
-    return response.data;
+    return response;
   }
 }
 

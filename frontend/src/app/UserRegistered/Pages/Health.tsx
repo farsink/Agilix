@@ -8,6 +8,7 @@ import { ArrowLeft, Hospital, Lightbulb } from "lucide-react";
 import ProgressIndicator from "@/components/ProgressIndicator";
 import { useStackAuthApi } from "@/Services/api/Stackclientapi";
 import { AxiosResponse } from "axios";
+import { toast } from "@/hooks/use-toast";
 
 const HealthSafety = () => {
   const navigate = useNavigate();
@@ -109,6 +110,16 @@ const HealthSafety = () => {
         formData
       );
       console.log("Data sent successfully:", response);
+      if (response.status === 200) {
+        const processID = response.data.processId;
+        navigate(`/completion/${processID}`);
+      } else {
+        toast({
+          title: "Error",
+          description: "Something went wrong",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Error sending profile data:", error);
     }
@@ -151,7 +162,6 @@ const HealthSafety = () => {
     }
 
     SentProfileData();
-    navigate("/completion");
   };
 
   return (

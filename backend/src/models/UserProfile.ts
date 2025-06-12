@@ -120,9 +120,9 @@ const userProfileSchema = new Schema<IUserProfile>(
         type: String,
         enum: [
           "sedentary",
-          "lightly_active",
-          "moderately_active",
-          "very_active",
+          "lightly-active",
+          "moderately-active",
+          "very-active",
         ],
         default: "lightly_active",
       },
