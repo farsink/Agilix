@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Camera, Settings, Sparkles } from "lucide-react";
 
 import { useWebSocket } from "@/hooks/useWebsocket";
+import { useRouter } from "next/navigation";
 
 const Completion = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [progress, setProgress] = useState(0);
   const status = useWebSocket(id || "");
   const [showFallback, setShowFallback] = useState(false);
@@ -34,12 +35,14 @@ const Completion = () => {
 
     const pollStatus = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/user/process-status/${id}`);
-        
+        const response = await fetch(
+          `http://localhost:5000/api/v1/user/process-status/${id}`
+        );
+
         if (!response.ok) {
           throw new Error(`API returned status: ${response.status}`);
         }
-        
+
         const data = await response.json();
 
         if (isMounted) {
@@ -50,24 +53,24 @@ const Completion = () => {
 
           // Show fallback UI after successful poll
           setShowFallback(true);
-          
+
           // Reset retry count on success
           retryCount = 0;
         }
       } catch (error) {
         console.error("Fallback poll failed:", error);
-        
+
         if (isMounted) {
           setShowFallback(true); // Show on error
-          
+
           // Increment retry count
           retryCount++;
-          
+
           // Stop polling after max retries
           if (retryCount >= MAX_RETRIES && fallbackInterval) {
             console.log(`Stopped polling after ${MAX_RETRIES} failed attempts`);
             clearInterval(fallbackInterval);
-            
+
             // You could set some state here to show a permanent error message
             // setApiError(true);
           }
@@ -77,7 +80,7 @@ const Completion = () => {
 
     // Initial poll
     pollStatus();
-    
+
     // Set up interval for subsequent polls
     fallbackInterval = setInterval(pollStatus, 5000);
 
@@ -86,26 +89,7 @@ const Completion = () => {
       if (fallbackInterval) clearInterval(fallbackInterval);
     };
   }, [id]);
-  //     try {
-  //       const response = await fetch(
-  //         `/api/v1/user/process-status/${processId}`
-  //       );
-  //       const data = await response.json();
 
-  //       if (data.status === "COMPLETED") {
-  //         clearInterval(fallbackInterval);
-  //       }
-
-  //       // Show fallback UI after first successful poll
-  //       setShowFallback(true);
-  //     } catch (error) {
-  //       console.error("Fallback poll failed:", error);
-  //       setShowFallback(true); // Show on error
-  //     }
-  //   }, 5000);
-
-  //   return () => clearInterval(fallbackInterval);
-  // }, [processId, navigate]);
   console.log(id);
 
   // Update progress based on WebSocket status
@@ -179,7 +163,7 @@ const Completion = () => {
   }, []);
 
   const handleStartJourney = () => {
-    ParseprogressData();
+    router.push("/dashboard");
   };
 
   return (
@@ -254,7 +238,7 @@ const Completion = () => {
             </Button>
             <Button
               variant='outline'
-              onClick={() => navigate("/userRegister")}
+              onClick={() => router.push("/userRegister")}
               className='flex items-center justify-center gap-2 py-3 border-gray-200 hover:border-orange-300'
             >
               <Settings className='h-4 w-4' />
@@ -275,6 +259,11 @@ const Completion = () => {
             <p className='text-xs text-gray-400'>
               Your personalized fitness journey awaits
             </p>
+            {showFallback && (
+              <p className='text-xs text-gray-400'>
+                Error: Failed to load your personalized fitness journey
+              </p>
+            )}
           </div>
         </div>
       </main>

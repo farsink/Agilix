@@ -1,0 +1,560 @@
+.workout-calendar {
+  min-height: 200vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.workout-calendar__container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0;
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Header Styles */
+.workout-calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.workout-calendar__header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.workout-calendar__back-button {
+  color: #2c3e50;
+  padding: 8px;
+}
+
+.workout-calendar__back-button:hover {
+  background-color: hsl(var(--calendar-soft-gray));
+}
+
+.workout-calendar__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.workout-calendar__header-right {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.workout-calendar__date {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Section Styles */
+.workout-calendar__section {
+  margin: 24px 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+.workout-calendar__section-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.workout-calendar__section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: hsl(var(--calendar-text-medium));
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Calendar Grid Styles */
+.workout-calendar__grid {
+  padding: 20px;
+}
+
+.workout-calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  margin-bottom: 12px;
+}
+
+.workout-calendar__weekday {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: hsl(var(--calendar-text-medium));
+  padding: 8px 0;
+}
+
+.workout-calendar__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+/* Calendar Day Styles */
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c3e50;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid transparent;
+}
+
+.calendar-day:hover {
+  background-color: hsl(var(--calendar-soft-gray));
+  border-color: hsl(var(--calendar-light-gray));
+}
+
+.calendar-day__number {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.calendar-day__icon {
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+/* Day Status Styles */
+.calendar-day--empty {
+  color: hsl(var(--calendar-text-medium));
+  opacity: 0.5;
+}
+
+.calendar-day--scheduled {
+  color: #2c3e50;
+  background-color: hsl(var(--calendar-soft-gray));
+}
+
+.calendar-day--completed {
+  background-color: hsl(var(--calendar-success));
+  color: #fff;
+  border-color: hsl(var(--calendar-success));
+}
+
+.calendar-day--completed:hover {
+  background-color: #218838;
+}
+
+.calendar-day--rest {
+  background-color: hsl(var(--calendar-text-medium));
+  color: #fff;
+  border-color: hsl(var(--calendar-text-medium));
+}
+
+.calendar-day--modified {
+  background-color: hsl(var(--calendar-warning));
+  color: hsl(var(--calendar-text-dark));
+  border-color: hsl(var(--calendar-warning));
+}
+
+.calendar-day--missed {
+  background-color: hsl(var(--calendar-danger, 0 70% 50%));
+  color: #fff;
+  border-color: hsl(var(--calendar-danger, 0 70% 50%));
+}
+
+.calendar-day--today {
+  background-color: hsl(var(--calendar-primary));
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(248, 137, 35, 0.3);
+  border-color: hsl(var(--calendar-primary));
+}
+
+.calendar-day--today:hover {
+  background-color: hsl(var(--calendar-primary-dark));
+}
+
+.calendar-day--selected {
+  border-color: hsl(var(--calendar-primary));
+  box-shadow: 0 0 0 2px rgba(248, 137, 35, 0.2);
+}
+
+/* Legend Styles */
+.workout-calendar__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 20px;
+  background-color: hsl(var(--calendar-soft-gray));
+  border-top: 1px solid #e9ecef;
+}
+
+.workout-calendar__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: hsl(var(--calendar-text-medium));
+}
+
+.legend-icon {
+  font-size: 14px;
+}
+
+/* Workout Card Styles */
+.workout-card {
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+.workout-card__header {
+  margin-bottom: 16px;
+}
+
+.workout-card__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.workout-card__exercises {
+  background-color: hsl(var(--calendar-soft-gray));
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.exercise-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.exercise-item:last-child {
+  border-bottom: none;
+}
+
+.exercise-item__icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.exercise-item__name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.exercise-item__sets {
+  font-size: 14px;
+  font-weight: 600;
+  color: hsl(var(--calendar-text-medium));
+  min-width: 60px;
+  text-align: right;
+}
+
+.exercise-item__timer {
+  padding: 6px 8px;
+  height: 32px;
+  border-color: hsl(var(--calendar-light-gray));
+}
+
+.exercise-item__timer:hover {
+  background-color: #f88923;
+  border-color: hsl(var(--calendar-primary));
+  color: #ffffff;
+}
+
+/* Alert Styles */
+.workout-card__alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.alert--warning {
+  background-color: hsl(var(--calendar-warning) / 0.2);
+  border: 1px solid hsl(var(--calendar-warning) / 0.4);
+  color: #856404;
+}
+
+.alert--info {
+  background-color: hsl(var(--calendar-primary) / 0.1);
+  border: 1px solid hsl(var(--calendar-primary) / 0.2);
+  color: hsl(var(--calendar-primary-dark));
+}
+
+.alert__icon {
+  font-size: 16px;
+}
+
+.alert__text {
+  font-weight: 500;
+}
+
+/* Streak Card Styles */
+.streak-card {
+  padding: 20px;
+  padding-bottom: 0px;
+}
+
+.streak-card__stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.streak-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.streak-stat__label {
+  font-size: 12px;
+  color: hsl(var(--calendar-text-medium));
+  font-weight: 500;
+}
+
+.streak-stat__value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.streak-progress {
+  margin-bottom: 16px;
+}
+
+.streak-progress__bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.streak-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #28a745, #f88923);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.streak-card__motivation {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: hsl(var(--calendar-text-medium));
+  font-style: italic;
+}
+
+/* Bottom Navigation */
+.workout-calendar__nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border-top: 1px solid #e9ecef;
+  position: sticky;
+  bottom: 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  color: hsl(var(--calendar-text-medium));
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-item--active {
+  color: #f88923;
+}
+
+.nav-item:hover {
+  color: #f88923;
+  background-color: hsl(var(--calendar-soft-gray));
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .workout-calendar__container {
+    max-width: 100%;
+  }
+
+  .workout-calendar__header {
+    padding: 12px 16px;
+  }
+
+  .workout-calendar__section {
+    margin: 16px 8px;
+  }
+
+  .workout-calendar__grid {
+    padding: 16px;
+  }
+
+  .calendar-day {
+    font-size: 14px;
+  }
+
+  .calendar-day__number {
+    font-size: 14px;
+  }
+
+  .workout-calendar__legend {
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .workout-calendar__legend-item {
+    font-size: 11px;
+  }
+
+  .exercise-item {
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .exercise-item__name {
+    font-size: 13px;
+  }
+
+  .exercise-item__sets {
+    font-size: 13px;
+    min-width: 50px;
+  }
+
+  .streak-card__stats {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .workout-calendar__nav {
+    padding: 12px 16px;
+  }
+
+  .nav-item {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .workout-calendar__section {
+    margin: 12px 8px;
+  }
+
+  .workout-calendar__legend {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .exercise-item__name {
+    font-size: 12px;
+  }
+
+  .calendar-day {
+    font-size: 12px;
+  }
+
+  .calendar-day__number {
+    font-size: 12px;
+  }
+}
+
+/* Focus States for Accessibility */
+.calendar-day:focus {
+  outline: 2px solid #f88923;
+  outline-offset: 2px;
+}
+
+.workout-calendar__back-button:focus,
+.nav-item:focus {
+  outline: 2px solid #f88923;
+  outline-offset: 2px;
+}
+
+/* Animation for streak progress */
+@keyframes fillProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-width);
+  }
+}
+
+.streak-progress__fill {
+  animation: fillProgress 1s ease-out;
+}
+
+/* Hover effects for interactive elements */
+.exercise-item:hover {
+  background-color: rgba(248, 137, 35, 0.05);
+  border-radius: 6px;
+  margin: 0 -8px;
+  padding: 12px 8px;
+}
+
+.calendar-day:active {
+  transform: scale(0.95);
+}
+
+/* Loading states */
+.calendar-day--loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Success animations */
+@keyframes completedPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+.calendar-day--completed {
+  animation: completedPulse 2s infinite;
+}
+
+/* calendar css*/

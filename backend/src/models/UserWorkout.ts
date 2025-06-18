@@ -15,13 +15,7 @@ interface IExercise {
 // Interface for daily workout
 interface IDailyWorkout {
   day: string;
-  type:
-    | "Strength"
-    | "Endurance"
-    | "Full Body"
-    | "Rest"
-    | "HIIT"
-    | "Circuit Training";
+  type: string;
   focus: string;
   exercises: IExercise[];
   completed?: boolean;
@@ -107,14 +101,6 @@ const dailyWorkoutSchema = new Schema<IDailyWorkout>(
     type: {
       type: String,
       required: true,
-      enum: [
-        "Strength",
-        "Endurance",
-        "Full Body",
-        "Rest",
-        "HIIT",
-        "Circuit Training",
-      ],
     },
     focus: { type: String, required: true },
     exercises: [exerciseSchema],

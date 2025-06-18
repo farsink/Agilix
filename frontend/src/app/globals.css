@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
 @plugin 'tailwind-scrollbar';
 
 @custom-variant dark (&:is(.dark *));
@@ -43,6 +42,17 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --color-agilix-primary-light: #fff2ec; /* #FFFFFF */
+  --color-agilix-primary-offwhite: hsl(210, 27%, 98%); /* #F8F9FA */
+  --color-agilix-accent-orange: hsl(27, 94%, 62%); /* #F88923 */
+  --color-agilix-accent-orange-dark: hsl(16, 100%, 70%); /* #FF6B35 */
+  --color-agilix-soft-gray: hsl(0, 0%, 96%); /* #F5F5F5 */
+  --color-agilix-light-gray: hsl(210, 17%, 93%); /* #E9ECEF */
+  --color-agilix-text-dark: hsl(207, 26%, 24%); /* #2C3E50 */
+  --color-agilix-text-medium: hsl(200, 10%, 46%); /* #6C757D */
+  --color-agilix-success: hsl(134, 61%, 41%); /* #28A745 */
+  --color-agilix-warning: hsl(45, 100%, 51%); /* #FFC107 */
 }
 
 :root {
@@ -53,7 +63,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: hsl(27, 94%, 62%);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -78,6 +88,15 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --calendar-primary: 20 95% 56%;
+  --calendar-primary-dark: 15 100% 57%;
+  --calendar-soft-gray: 0 0% 96%;
+  --calendar-light-gray: 220 14% 96%;
+  --calendar-text-dark: 210 22% 22%;
+  --calendar-text-medium: 220 9% 46%;
+  --calendar-success: 134 61% 41%;
+  --calendar-warning: 45 100% 51%;
 }
 
 .dark {
@@ -87,7 +106,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
+  --primary: hsl(27, 94%, 62%);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -107,11 +126,22 @@
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary-foreground: hsl(16, 100%, 70%);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --color-calendar-primary: hsl(var(--calendar-primary));
+  --color-calendar-primary-dark: hsl(var(--calendar-primary-dark));
+  --color-calendar-soft-gray: hsl(var(--calendar-soft-gray));
+  --color-calendar-light-gray: hsl(var(--calendar-light-gray));
+  --color-calendar-text-dark: hsl(var(--calendar-text-dark));
+  --color-calendar-text-medium: hsl(var(--calendar-text-medium));
+  --color-calendar-success: hsl(var(--calendar-success));
+  --color-calendar-warning: hsl(var(--calendar-warning));
+
+  --color-primary: hsl(27, 94%, 62%);
+  --color-primary-foreground: hsl(27, 94%, 62%);
 }
 ::-webkit-scrollbar {
   width: 8px;
@@ -153,4 +183,17 @@
   .animate-marquee {
     animation: marquee 15s linear infinite;
   }
+}
+
+/* calender theme  */
+
+@theme {
+  --color-calendar-primary: hsl(var(--calendar-primary));
+  --color-calendar-primary-dark: hsl(var(--calendar-primary-dark));
+  --color-calendar-soft-gray: hsl(var(--calendar-soft-gray));
+  --color-calendar-light-gray: hsl(var(--calendar-light-gray));
+  --color-calendar-text-dark: hsl(var(--calendar-text-dark));
+  --color-calendar-text-medium: hsl(var(--calendar-text-medium));
+  --color-calendar-success: hsl(var(--calendar-success));
+  --color-calendar-warning: hsl(var(--calendar-warning));
 }

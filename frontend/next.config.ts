@@ -37,14 +37,13 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/completion",
+        source: "/completion/:id",
         destination: "/UserRegistered",
         permanent: true,
       },
     ];
   },
   /* config options here */
-  suppressHydrationWarning: true,
 };
 
 export default nextConfig;
