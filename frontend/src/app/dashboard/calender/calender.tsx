@@ -156,7 +156,7 @@ const Calendar = () => {
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDayOfMonth = getFirstDayOfMonth(currentDate);
     const prevMonthDays = getPreviousMonthDays(currentDate);
-    const days = [];
+    const days: React.ReactNode[] = [];
 
     // Previous month's trailing days
     for (let i = firstDayOfMonth - 1; i >= 0; i--) {

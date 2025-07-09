@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../config/database_Sql";
+import { log } from "console";
 
 export const isRegistered = async (req: Request, res: Response) => {
   const { id } = req.params; // Extract stackauthUserId from URL parameters
@@ -9,7 +10,8 @@ export const isRegistered = async (req: Request, res: Response) => {
     const user = await prisma.user.findUnique({
       where: { stackauthUserId: id },
     });
-
+    console.log(user);
+    
     if (!user) {
       res.status(250).json({ success: false, message: "User not found" });
       return;

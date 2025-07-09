@@ -29,10 +29,7 @@ export default function UserRegisteredLayout({
       try {
         const res: res = await IsRegistered(userId as string);
 
-        console.log(res);
-
         if (res.success && res.isRegistered) {
-          setLoading(false);
           router.push("/dashboard");
           return;
         } else if (res.success && !res.isRegistered) {

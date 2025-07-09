@@ -1,4 +1,5 @@
 import { UserProfile } from "../models/UserProfile";
+import { UserWorkout } from "../models/UserWorkout";
 
 export class UserProfileService {
   async saveOrUpdateUserProfile(formData: any) {
@@ -30,7 +31,7 @@ export class UserProfileService {
           equipment: {
             preferredWorkoutSpace:
               parsedWorkoutPreferences.locations &&
-              parsedWorkoutPreferences.locations.length > 0
+                parsedWorkoutPreferences.locations.length > 0
                 ? parsedWorkoutPreferences.locations.length > 1
                   ? "mixed"
                   : parsedWorkoutPreferences.locations[0]
@@ -72,7 +73,7 @@ export class UserProfileService {
           equipment: {
             preferredWorkoutSpace:
               parsedWorkoutPreferences.locations &&
-              parsedWorkoutPreferences.locations.length > 0
+                parsedWorkoutPreferences.locations.length > 0
                 ? parsedWorkoutPreferences.locations.length > 1
                   ? "mixed"
                   : parsedWorkoutPreferences.locations[0]
@@ -116,8 +117,13 @@ export class UserProfileService {
 
   async getUserProfile(userId: string) {
     try {
-      const profile = await UserProfile.findOne({ userId });
-      return profile;
+      const profile = await UserProfile.findOne({ stackauthUserId: userId });
+      const WorkoutPlan = await UserWorkout.findOne({ stackauthUserId: userId });
+
+      if (!profile) {
+        return null;
+      }
+      return { profile, WorkoutPlan };
     } catch (error) {
       console.error("Error getting user profile:", error);
       throw new Error("Could not get user profile");

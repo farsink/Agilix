@@ -18,14 +18,14 @@ io.on("connection", (socket) => {
     console.log("Client disconnected:", socket.id);
   });
 });
-const PORT = process.env.PORT || 4000;
 
 async function startServer() {
   await testConnection();
   await connectMongoDB();
 
-  server.listen(PORT, () => {
-    console.log(`Server listening on http://localhost:${PORT}`);
+  const port = Number(process.env.PORT) || 5000;
+  server.listen(port, "0.0.0.0", () => {
+    console.log(`Server listening on http://localhost:${port}`);
   });
 }
 

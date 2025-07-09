@@ -27,6 +27,9 @@ export class AuthMiddleware {
       const accessToken = req.headers["accesstoken"] as string;
       const RefreshToken = req.headers["x-refresh-token"] as string;
 
+      console.log("accessToken :", accessToken, "RefreshToken : ", RefreshToken);
+
+
 
       if (!accessToken) {
         res.status(401).json({

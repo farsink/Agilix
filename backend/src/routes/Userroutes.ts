@@ -14,7 +14,7 @@ const uplaod = multer();
 router.get("/isRegistered/:id", isRegistered);
 
 router.post(
-  "/profile/setup",
+  "/",
   uplaod.none(),
   userAuth.authenticate,
   userProfileController.setupUserProfile.bind(userProfileController)
@@ -25,4 +25,9 @@ router.get("/process-status/:processId", (req, res) => {
 
   res.status(200).json(status);
 });
+router.get(
+  "/profile",
+  userAuth.authenticate,
+  userProfileController.getUserProfile.bind(userProfileController) 
+);
 export default router;

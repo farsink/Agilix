@@ -5,7 +5,7 @@ import helmet from "helmet";
 import EquipmentRoute from "./routes/EquipmentRoute";
 import cors from "cors";
 import UserRoute from "./routes/Userroutes";
-
+import StatiscsRoute from "./routes/Statiscs";
 const app = express();
 // Logging middleware
 app.use(
@@ -39,11 +39,11 @@ app.use("/api/v1/equipments", EquipmentRoute);
 // Routes for users
 app.use("/api/v1/user", UserRoute);
 
-
-
+// route for statics
+app.use("/api/v1/statics", StatiscsRoute);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Server is running on port 2000");
+  res.send("Server is running on port 5000");
 });
 
 export default app;

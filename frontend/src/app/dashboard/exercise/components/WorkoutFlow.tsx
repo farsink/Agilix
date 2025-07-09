@@ -15,20 +15,10 @@ import {
   Award,
   Clock,
 } from "lucide-react";
-
-interface Round {
-  name: string;
-  duration: string;
-  imageUrl: string;
-}
-
-interface Workout {
-  title: string;
-  rounds: Round[];
-}
+import { Exercise2 } from "@/types/workout";
 
 interface WorkoutFlowProps {
-  workout: Workout;
+  workout: Exercise2[];
   onFinish: () => void;
 }
 
@@ -48,15 +38,15 @@ const formatTime = (seconds: number): string => {
 const WorkoutFlow: React.FC<WorkoutFlowProps> = ({ workout, onFinish }) => {
   const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const totalRounds = workout.rounds.length;
-  const currentRound = workout.rounds[currentRoundIndex];
+  const totalRounds = workout.length || 2;
+  const currentRound = workout[currentRoundIndex];
 
-  const initialDuration = parseDuration(currentRound.duration);
+  const initialDuration = parseDuration(currentRound?.duration || "00:00");
   const [timeLeft, setTimeLeft] = useState(initialDuration);
 
   useEffect(() => {
-    setTimeLeft(parseDuration(workout.rounds[currentRoundIndex].duration));
-  }, [currentRoundIndex, workout.rounds]);
+    setTimeLeft(parseDuration(workout[currentRoundIndex].duration || "00:00"));
+  }, [currentRoundIndex, workout]);
 
   useEffect(() => {
     if (timeLeft <= 0 || !isPlaying) {

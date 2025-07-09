@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
       "images.pexels.com",
       "cdn.trustpilot.net",
       "upload.wikimedia.org",
+      "fitnessvolt.com",
     ],
   },
   async redirects() {

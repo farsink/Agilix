@@ -3,6 +3,7 @@ import { UserProfile } from "../models/UserProfile";
 import { UserProfileService } from "../services/UserProfile.service";
 import { N8NWebhookService } from "../services/N8NWebhook.service";
 import statustrackingService from "../services/statustracking.service";
+import { HttpStatusCode } from "axios";
 
 export class UserProfileController {
   private userProfileService: UserProfileService;
@@ -48,6 +49,43 @@ export class UserProfileController {
       console.error("Error setting up user profile:", error);
       statustrackingService.updateStatus(processId, "FAILED", 100);
       res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  public async getUserProfile(req: Request, res: Response): Promise<void> {
+    try {
+      const user = req.user;
+
+
+      if (!user) {
+        res.status(HttpStatusCode.Unauthorized).json({
+          success: false,
+          message: "User not authenticated",
+        });
+        return;
+      }
+
+      const profile = await this.userProfileService.getUserProfile(user.id);
+
+      if (!profile) {
+        res.status(HttpStatusCode.NotFound).json({
+          success: false,
+          message: "User profile not found",
+        });
+        return;
+      }
+
+      res.status(HttpStatusCode.Ok).json({
+        success: true,
+        data: profile,
+        message: "User profile retrieved successfully",
+      });
+    } catch (error) {
+      console.error("Error getting user profile:", error);
+      res.status(HttpStatusCode.InternalServerError).json({
+        success: false,
+        message: "Internal server error",
+      });
     }
   }
 }

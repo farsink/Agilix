@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { useState } from "react";
 import WorkoutFlow from "./components/WorkoutFlow";
+import { UserResponse } from "../page";
+import { useUserProfile } from "@/hooks/useUser";
+import TriangleLoader from "@/app/Components/Loader";
+import { Exercise2 } from "@/types/workout";
+import { mapImages } from "../data/WorkoutImages";
+import { mapWorkoutDescription } from "../data/WorkoutDescription";
 
 const workoutData = {
   title: "Lower Body Training",
@@ -39,11 +45,38 @@ const workoutData = {
 const Index = () => {
   const router = useRouter();
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useUserProfile() as {
+    data: UserResponse;
+    isLoading: boolean;
+    error: { message: string };
+  };
+  if (isLoading) return <TriangleLoader />;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const getCurrentDayWorkoutExercises = () => {
+    const today = new Date().toLocaleString("en-US", { weekday: "long" });
+    const currentDayWorkout = user?.data.WorkoutPlan.weeklySchedule.find(
+      (workout) => workout.day.toLowerCase() === today.toLowerCase()
+    );
+    return currentDayWorkout?.exercises || [];
+  };
+  const WorkoutData = user?.data.WorkoutPlan.weeklySchedule.find(
+    (workout) =>
+      workout.day.toLowerCase() ===
+      new Date().toLocaleString("en-US", { weekday: "long" }).toLowerCase()
+  );
+  const Exercises: Exercise2[] = getCurrentDayWorkoutExercises();
+  console.log(Exercises);
+
 
   if (isWorkoutStarted) {
     return (
       <WorkoutFlow
-        workout={workoutData}
+        workout={Exercises}
         onFinish={() => setIsWorkoutStarted(false)}
       />
     );
@@ -63,7 +96,9 @@ const Index = () => {
               >
                 <ArrowLeft className='w-4 h-4' />
               </Button>
-              <h1 className='text-lg font-normal text-foreground'>Calendar</h1>
+              <h1 className='text-lg font-normal text-foreground'>
+                {WorkoutData?.day}
+              </h1>
             </div>
 
             <div className='flex items-center'>
@@ -77,7 +112,9 @@ const Index = () => {
 
           <div className='relative rounded-2xl overflow-hidden shadow-lg'>
             <img
-              src={workoutData.imageUrl}
+              src={mapImages(
+                Exercises[Math.floor(Math.random() * Exercises.length)]
+              )}
               alt='Woman doing lower body workout'
               className='w-full h-64 object-cover'
             />
@@ -100,10 +137,10 @@ const Index = () => {
 
           <section className='bg-card p-6 rounded-2xl shadow-sm'>
             <h2 className='text-2xl font-bold text-foreground'>
-              {workoutData.title}
+              {WorkoutData?.focus} Training
             </h2>
             <p className='mt-3 text-muted-foreground leading-relaxed'>
-              {workoutData.description}
+              {mapWorkoutDescription(WorkoutData?.focus as string)}
             </p>
           </section>
 
@@ -111,18 +148,18 @@ const Index = () => {
             <div className='flex justify-between items-baseline'>
               <h3 className='text-xl font-bold text-foreground'>Rounds</h3>
               <span className='text-sm font-semibold text-muted-foreground'>
-                1/8
+                1/7
               </span>
             </div>
             <div className='space-y-3'>
-              {workoutData.rounds.map((round) => (
+              {Exercises.map((round) => (
                 <div
                   key={round.name}
                   className='bg-card p-4 rounded-xl flex items-center justify-between shadow-sm transition-transform duration-200 hover:scale-[1.02] hover:shadow-md'
                 >
                   <div className='flex items-center gap-4'>
                     <img
-                      src={round.imageUrl}
+                      src={mapImages(round)}
                       alt={round.name}
                       className='w-16 h-16 object-cover rounded-lg'
                     />

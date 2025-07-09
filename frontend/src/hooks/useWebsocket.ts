@@ -4,7 +4,7 @@ import io from "socket.io-client"; // Recommended
 import { ProcessStatus } from "../types/intex";
 import { Socket } from "socket.io-client";
 
-const socket: typeof Socket = io("http://localhost:5000", {
+const socket: typeof Socket = io(process.env.NEXT_PUBLIC_URL_SERVER as string, {
   transports: ["websocket"],
   reconnectionAttempts: 3,
 });

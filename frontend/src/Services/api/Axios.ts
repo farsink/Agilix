@@ -1,11 +1,10 @@
 import axios from "axios";
 
-import dotenv from "dotenv";
-dotenv.config();
+console.log("Env variables:", process.env);
 
 // Base API configuration
 const api = axios.create({
-  baseURL: "http://localhost:5000/api/v1", // Base URL for all API requests
+  baseURL: process.env.NEXT_PUBLIC_URL_SERVER || "http://localhost:4000/api/v1", // Base URL for all API requests
   timeout: 10000, // Request timeout
   headers: {
     "Content-Type": "application/json", // Default content type
@@ -25,7 +24,6 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 
 // Response interceptor (e.g., for handling errors globally)
 api.interceptors.response.use(

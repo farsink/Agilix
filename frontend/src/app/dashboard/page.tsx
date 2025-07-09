@@ -18,10 +18,96 @@ import {
 import Image from "next/image";
 import ProfileComponent from "./components/Profilesection";
 import TodayActivity from "./TodaysActivity";
+import TriangleLoader from "../Components/Loader";
+import { useUser } from "@stackframe/stack";
+import { useUserProfile } from "@/hooks/useUser";
+import { UserMetrics } from "@/lib/Userstatics";
+import { IUserInfo } from "@/types/user";
+
+export type UserResponse = {
+  success: boolean;
+  data: IUserInfo;
+  message: string;
+};
 
 const FitnessDashboard = () => {
   const [activeTab, setActiveTab] = useState("week");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useUserProfile() as {
+    data: UserResponse;
+    isLoading: boolean;
+    error: { message: string };
+  };
 
+  const userStack = useUser();
+  console.log(user);
+
+  if (isLoading) return <TriangleLoader />;
+
+  if (error) return <div>Error: {error.message}</div>;
+
+  const streak = user ? UserMetrics.getDayStreak(user.data) : 0;
+  const xp = user ? UserMetrics.calculateXP(user.data as IUserInfo) : 300;
+  const level = user ? UserMetrics.calculateLevel(xp) : 3;
+  const TodayExercise = user
+    ? UserMetrics.TodayExercise(user.data as IUserInfo)
+    : [];
+  console.log(TodayExercise);
+
+  let message = "";
+  switch (level) {
+    case 1:
+      message = "You're just starting out. Keep it up!";
+      break;
+    case 2:
+      message = "You're getting the hang of this!";
+      break;
+    case 3:
+      message = "You're making progress!";
+      break;
+    case 4:
+      message = "You're crushing it!";
+      break;
+    case 5:
+      message = "You're on a roll!";
+      break;
+    case 6:
+      message = "You're a fitness rockstar!";
+      break;
+    case 7:
+      message = "You're doing great!";
+      break;
+    case 8:
+      message = "You're killing it!";
+      break;
+    case 9:
+      message = "You're a fitness master!";
+      break;
+    case 10:
+      message = "You're unstoppable!";
+      break;
+    default:
+      message = "You're just starting out. Keep it up!";
+      break;
+  }
+
+  // badges collection
+  const badges = [
+    "/assets/badges-1.webp",
+    "/assets/badges-2.webp",
+    "/assets/badges-3.webp",
+    "/assets/badges-4.webp",
+  ];
+
+  // random color generator
+  function getRandomColor() {
+    const colors = ["#4DD0E1", "#FFB74D", "#9C27B0", "#66D9EF"];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
   // Sample data for the chart
   const weekData = [
     { day: "M", workout: 45, calories: 320 },
@@ -50,11 +136,21 @@ const FitnessDashboard = () => {
       <div className='bg-[#F8F9FA] px-6 py-4 flex items-center justify-between'>
         <div className='flex items-center gap-4'>
           <div className='w-14 h-14 bg-orange-500 rounded-full flex items-center justify-center'>
-            <span className='text-white text-xl font-semibold'>S</span>
+            <span className='text-white text-xl font-semibold'>
+              {userStack?.displayName?.charAt(0)}
+            </span>
           </div>
           <div>
-            <p className='text-base font-bold text-gray-800'>Hello, Sandra</p>
-            <p className='text-sm text-gray-500 font-light'>Today 25 Nov.</p>
+            <p className='text-base font-bold text-gray-800'>
+              Hello, {userStack?.displayName}
+            </p>
+            <p className='text-sm text-gray-500 font-light'>
+              {new Date().toLocaleDateString("en-US", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+            </p>
           </div>
         </div>
         <div className='w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center'>
@@ -67,24 +163,23 @@ const FitnessDashboard = () => {
         <div className='flex items-center justify-between mb-3'>
           <div className='text-left'>
             <p className='text-xs text-orange-500 font-bold border border-orange-300 bg-amber-50 px-2 py-1 rounded-lg inline-block'>
-              12 DAY STREAK
+              {streak} DAY STREAK
             </p>
           </div>
           <div className='text-right'>
             <p className='text-sm text-gray-500 font-medium'>
-              XP: 2,450 LEVEL 8
+              XP: {xp} LEVEL {level}
             </p>
           </div>
         </div>
         <div className='w-full bg-gray-200 rounded-full h-2 mb-2'>
           <div
             className='h-2 rounded-full bg-gradient-to-r from-orange-400 to-orange-600'
-            style={{ width: "75%" }}
+            style={{ width: `${(xp / 1000) * 100}%` }}
           ></div>
         </div>
-        <p className='text-sm text-gray-600 text-center'>
-          You&apos;re on fire! Keep the momentum going!
-        </p>
+
+        <p className='text-sm text-gray-600 text-center'>{message}</p>
       </div>
 
       {/* Main Content */}
@@ -98,11 +193,14 @@ const FitnessDashboard = () => {
             </p>
             <div className='flex items-center gap-2'>
               <div className='flex -space-x-2'>
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className='w-6 h-6 bg-white/20 rounded-full border border-white/30'
-                  ></div>
+                {badges.map((badge, index) => (
+                  <Image
+                    key={index}
+                    src={badge}
+                    alt={`badge-${index}`}
+                    width={20}
+                    height={20}
+                  />
                 ))}
               </div>
               <span className='text-sm'>+4</span>
@@ -122,22 +220,41 @@ const FitnessDashboard = () => {
 
         {/* Calendar Week */}
         <div className='flex justify-between items-center'>
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-            (day, index) => (
-              <div key={day} className='text-center'>
-                <p className='text-xs text-gray-500 mb-1'>{day}</p>
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
-                    index === 3
-                      ? "bg-gray-900 text-white"
-                      : "bg-gray-100 text-gray-600"
-                  }`}
-                >
-                  {22 + index}
-                </div>
-              </div>
-            )
-          )}
+          {(() => {
+            const today = new Date();
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday
+
+            return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+              (day, index) => {
+                const date = new Date(startOfWeek);
+                date.setDate(startOfWeek.getDate() + index);
+
+                const isToday =
+                  date.getDate() === today.getDate() &&
+                  date.getMonth() === today.getMonth() &&
+                  date.getFullYear() === today.getFullYear();
+
+                return (
+                  <div
+                    key={day}
+                    className='flex flex-col items-center justify-center text-center'
+                  >
+                    <p className='text-xs text-gray-500 mb-1'>{day}</p>
+                    <div
+                      className={`w-10 h-10 rounded-full flex flex-col items-center justify-center text-sm font-medium ${
+                        isToday
+                          ? "bg-gray-900 text-white"
+                          : "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      {date.getDate()}
+                    </div>
+                  </div>
+                );
+              }
+            );
+          })()}
         </div>
         <div>
           <div className='flex items-center justify-between mb-4'>
@@ -164,38 +281,41 @@ const FitnessDashboard = () => {
             {/* Exercise List */}
             <div className='col-span-3 bg-white rounded-2xl p-4'>
               <div className='space-y-4'>
-                <div className='flex items-center justify-between'>
+                {TodayExercise?.length > 0 ? (
+                  TodayExercise?.map((exercise, index) => (
+                    <>
+                      <div
+                        className='flex items-center justify-between'
+                        key={index}
+                      >
+                        <div className='flex items-center gap-3'>
+                          <div
+                            className='w-1 h-8 rounded-full'
+                            style={{ backgroundColor: getRandomColor() }}
+                          ></div>
+                          <div>
+                            <p className='font-bold text-gray-800'>
+                              {exercise.name}
+                            </p>
+                          </div>
+                        </div>
+                        <p className='text-sm text-gray-600'>
+                          {exercise?.sets}x{exercise?.reps}
+                        </p>
+                      </div>
+                    </>
+                  ))
+                ) : (
                   <div className='flex items-center gap-3'>
-                    <div className='w-1 h-8 bg-blue-500 rounded-full'></div>
+                    <div
+                      className='w-1 h-8 rounded-full'
+                      style={{ backgroundColor: getRandomColor() }}
+                    ></div>
                     <div>
-                      <p className='font-bold text-gray-800'>Push-ups</p>
-                      <p className='text-xs text-gray-500'>Chest, Triceps</p>
+                      <p className='font-bold text-gray-800'>Rest Day</p>
                     </div>
                   </div>
-                  <p className='text-sm text-gray-600'>3x12</p>
-                </div>
-
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-3'>
-                    <div className='w-1 h-8 bg-green-500 rounded-full'></div>
-                    <div>
-                      <p className='font-bold text-gray-800'>Squats</p>
-                      <p className='text-xs text-gray-500'>Legs, Glutes</p>
-                    </div>
-                  </div>
-                  <p className='text-sm text-gray-600'>3x15</p>
-                </div>
-
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-3'>
-                    <div className='w-1 h-8 bg-orange-500 rounded-full'></div>
-                    <div>
-                      <p className='font-bold text-gray-800'>Lunges</p>
-                      <p className='text-xs text-gray-500'>Legs, Core</p>
-                    </div>
-                  </div>
-                  <p className='text-sm text-gray-600'>3x10</p>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -308,7 +428,10 @@ const FitnessDashboard = () => {
         </div>
 
         {/* Profile Component */}
-        <ProfileComponent />
+        <ProfileComponent
+          data={user.data.profile}
+          user={userStack?.displayName as string}
+        />
 
         {/* Today's Activity */}
         <TodayActivity />

@@ -1,7 +1,14 @@
 import React from "react";
 import { MapPin, Ruler, Weight, Target } from "lucide-react";
+import { IUserProfile } from "@/types/user";
 
-export default function ProfileComponent() {
+export default function ProfileComponent({
+  data,
+  user,
+}: {
+  data: IUserProfile;
+  user: string;
+}) {
   return (
     <div className='bg-white rounded-xl p-6 border border-gray-100'>
       <div className='flex items-start gap-4'>
@@ -13,7 +20,9 @@ export default function ProfileComponent() {
               background: "linear-gradient(135deg, #F88923 0%, #FF6B35 100%)",
             }}
           >
-            <span className='text-white text-xl font-medium'>E</span>
+            <span className='text-white text-xl font-medium'>
+              {user.charAt(0).toUpperCase()}
+            </span>
           </div>
         </div>
 
@@ -21,13 +30,16 @@ export default function ProfileComponent() {
         <div className='flex-1'>
           <div className='flex items-start justify-between'>
             <div>
-              <h3 className='text-sm font-semibold' style={{ color: "#2C3E50" }}>
-                Ellen Jackson
+              <h3
+                className='text-sm font-semibold'
+                style={{ color: "#2C3E50" }}
+              >
+                {user}
               </h3>
               <div className='flex items-center gap-1 mt-1'>
                 <MapPin className='w-3.5 h-3.5' style={{ color: "#6C757D" }} />
                 <span className='text-sm' style={{ color: "#6C757D" }}>
-                  Hartford
+                  Location
                 </span>
               </div>
             </div>
@@ -40,7 +52,7 @@ export default function ProfileComponent() {
                   style={{ color: "#6C757D" }}
                 />
                 <p className='text-sm font-light' style={{ color: "#2C3E50" }}>
-                  164 cm
+                  {data.bodyMetrics.height} cm
                 </p>
                 <p className='text-xs font-light' style={{ color: "#6C757D" }}>
                   Height
@@ -52,7 +64,7 @@ export default function ProfileComponent() {
                   style={{ color: "#6C757D" }}
                 />
                 <p className='text-sm font-light' style={{ color: "#2C3E50" }}>
-                  50 kg
+                  {data.bodyMetrics.currentWeight} kg
                 </p>
                 <p className='text-xs font-light' style={{ color: "#6C757D" }}>
                   Weight

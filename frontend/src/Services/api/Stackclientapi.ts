@@ -11,7 +11,10 @@ class StackAuthApiClient {
   private axiosInstance: AxiosInstance;
   private getAccessToken: (() => Promise<AuthToken | null>) | null = null;
 
-  constructor(baseURL: string = "http://localhost:5000/api/v1") {
+  constructor(
+    baseURL: string = process.env.NEXT_PUBLIC_URL_SERVER ||
+      "http://localhost:5000/api/v1"
+  ) {
     this.axiosInstance = axios.create({
       baseURL,
       timeout: 10000,
