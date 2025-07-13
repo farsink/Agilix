@@ -10,7 +10,7 @@ const app = express();
 // Logging middleware
 app.use(
   cors({
-    origin: "http://localhost:3000", // Replace '*' with the specific origin
+    origin: ["http://localhost:3000", "http://localhost:3001"], // Replace '*' with the specific origin
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow credentials
     allowedHeaders: [

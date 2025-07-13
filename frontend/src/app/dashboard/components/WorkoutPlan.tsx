@@ -34,7 +34,7 @@ export function WorkoutPlan() {
       <div className='flex'>
         {workouts.map((workout, index) => (
           <div
-            className='flex-[0_0_calc(50%-8px)] sm:flex-[0_0_calc(50%-12px)] md:flex-[0_0_calc(33.333%-16px)] lg:flex-[0_0_calc(25%-16px)] min-w-0 pl-4'
+            className='flex-[0_0_calc(50%-8px)] sm:flex-[0_0_calc(50%-12px)] md:flex-[0_0_calc(33.333%-16px)] min-w-0 pl-4'
             key={index}
           >
             <WorkoutCard workout={workout} isLoading={isLoading} />

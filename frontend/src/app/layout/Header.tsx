@@ -33,7 +33,7 @@ export default function Header({
           : "bg-transparent py-6"
       )}
     >
-      <div className='container flex items-center justify-between ml-5'>
+      <div className='flex items-center justify-between ml-5'>
         <div className='flex items-center gap-2 pl-4'>
           <div className='w-8 h-8 rounded-lg  flex items-center justify-center'>
             <Image
@@ -77,7 +77,7 @@ export default function Header({
           <Button
             variant='outline'
             size='sm'
-            className='border-[#ea8455] border-1 text-[#ea8455] hover:bg-[#ea8455] hover:text-white rounded-full px-6 mr-10 p-4'
+            className='relative right-10 top-0 border-[#ea8455] border-1 text-[#ea8455] hover:bg-[#ea8455] hover:text-white rounded-full'
             onClick={() => navigate.push("/handler/sign-up")}
           >
             Start Free Trial
@@ -86,7 +86,7 @@ export default function Header({
           <Button
             variant='ghost'
             onClick={() => navigate.push("/dashboard")}
-            className='relative text-sm sm:text-md font-medium text-gray-500 hover:text-gray-700 hover:border-[#ea8455] hover:border-1  mr-10 p-4'
+            className='relative text-sm sm:text-md font-medium text-gray-500 hover:text-gray-700 hover:border-[#ea8455] hover:border-1 '
           >
             Skip
           </Button>

@@ -84,7 +84,7 @@ const Index = () => {
 
   return (
     <div className='min-h-screen bg-gray-200 flex justify-center font-sans'>
-      <main className='w-full max-w-md bg-background text-foreground'>
+      <main className='w-full bg-background text-foreground'>
         <div className='p-4 md:p-6 space-y-6'>
           <header className='flex items-center justify-between'>
             <div className='flex items-center gap-3'>

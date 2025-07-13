@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <main>{children}</main>
+      <main className="mx-auto max-w-lg">{children}</main>
       <BottomNavBar />
     </>
   );

@@ -14,8 +14,8 @@ export default function WorkoutCalendar() {
   // Today's workout data
 
   return (
-    <div className='min-h-[200vh] font-sans bg-[#F8F9FA]'>
-      <div className='max-w-full mx-auto p-0 bg-[#F8F9FA] min-h-screen'>
+    <div className='min-h-screen font-sans bg-[#F8F9FA]'>
+      <div className='max-w-5xl mx-auto p-0 bg-[#F8F9FA] min-h-screen'>
         {/* Header */}
         <div className='flex items-center justify-between px-4 py-3 bg-white'>
           {/* Left side - Back button and title */}

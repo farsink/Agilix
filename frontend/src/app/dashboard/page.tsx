@@ -131,7 +131,7 @@ const FitnessDashboard = () => {
   };
 
   return (
-    <div className='min-h-screen bg-[#F8F9FA]'>
+    <div className='min-h-screen bg-[#F8F9FA] max-w-5xl'>
       {/* Header */}
       <div className='bg-[#F8F9FA] px-6 py-4 flex items-center justify-between'>
         <div className='flex items-center gap-4'>
