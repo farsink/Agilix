@@ -44,7 +44,7 @@ const FitnessDashboard = () => {
   };
 
   const userStack = useUser();
-  console.log(user);
+
 
   if (isLoading) return <TriangleLoader />;
 

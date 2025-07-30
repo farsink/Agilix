@@ -1,56 +1,110 @@
 import { toast } from "@/hooks/use-toast";
-import api from "./Axios";
 import { useStackAuthApi } from "./Stackclientapi";
+import { 
+  withRetry, 
+  withTimeout, 
+  classifyError, 
+  ErrorType, 
+  ClassifiedError,
+  DEFAULT_RETRY_CONFIG 
+} from "@/utils/errorHandling";
 
-export const IsRegistered = async (userId: string) => {
-  try {
-    const response = await api.get(`/user/isRegistered/${userId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error Fetching user", error);
-    toast({
-      title: "Error fetching user",
-      description: "Please try again later.",
-      variant: "destructive",
-    });
-    throw error;
-  }
-};
+export interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: ClassifiedError;
+}
 
-// Fetch user profile using authenticated API client
-export const getUserProfile = async () => {
-  try {
-    // useStackAuthApi is a hook, must be used inside a React component or hook
-    // We'll provide a helper hook for React Query
-    throw new Error(
-      "getUserProfile should be called via useUserProfileQuery hook"
-    );
-  } catch (error) {
-    console.error("Error fetching user profile", error);
-    toast({
-      title: "Error fetching user profile",
-      description: "Please try again later.",
-      variant: "destructive",
-    });
-    throw error;
-  }
-};
+export interface IsRegisteredResponse {
+  success: boolean;
+  isRegistered: boolean;
+  message?: string;
+}
 
-// Helper hook for React Query
-export const useUserProfileQueryFn = () => {
+export const useUserApi = () => {
   const { api } = useStackAuthApi();
-  return async () => {
+
+  const IsRegistered = async (): Promise<IsRegisteredResponse> => {
     try {
-      const response = await api.get("/user/profile"); // Adjust endpoint if needed
+      // Wrap the API call with retry logic and timeout
+      const response = await withRetry(
+        () => withTimeout(
+          api.get<IsRegisteredResponse>(`/user/isRegistered`),
+          12000, // 12 second timeout for this specific call
+          'Registration check timed out'
+        ),
+        {
+          ...DEFAULT_RETRY_CONFIG,
+          maxAttempts: 2, // Fewer retries for registration check
+        },
+        (attempt, error) => {
+          console.log(`Retrying IsRegistered call (attempt ${attempt}):`, error.message);
+        }
+      );
+
+      // On success, return the data directly. TanStack Query will handle the rest.
       return response.data;
-    } catch (error) {
-      console.error("Error fetching user profile", error);
-      toast({
-        title: "Error fetching user profile",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-      throw error;
+
+    } catch (error: any) {
+      const classifiedError = error.type ? error : classifyError(error);
+      
+      console.error("Error in IsRegistered:", classifiedError);
+      
+      // Don't show toast for auth errors - let the component handle redirect
+      if (classifiedError.type !== ErrorType.AUTH) {
+        toast({
+          title: "Registration Check Failed",
+          description: classifiedError.userMessage,
+          variant: "destructive",
+        });
+      }
+
+      // On failure, throw the classified error. TanStack Query will catch it.
+      throw classifiedError;
     }
   };
+
+ 
+
+  const getUserProfile = async (): Promise<ApiResponse> => {
+    try {
+      const response = await withRetry(
+        () => withTimeout(
+          api.get("/user/profile"),
+          10000, // 10 second timeout for profile
+          'Profile fetch timed out'
+        ),
+        DEFAULT_RETRY_CONFIG,
+        (attempt, error) => {
+          console.log(`Retrying getUserProfile call (attempt ${attempt}):`, error.message);
+        }
+      );
+
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error: any) {
+      const classifiedError = error.type ? error : classifyError(error);
+      
+      console.error("Error in getUserProfile:", classifiedError);
+      
+      // Don't show toast for auth errors - let the component handle redirect
+      if (classifiedError.type !== ErrorType.AUTH) {
+        toast({
+          title: "Profile Fetch Failed",
+          description: classifiedError.userMessage,
+          variant: "destructive",
+        });
+      }
+
+      return {
+        success: false,
+        error: classifiedError
+      };
+    }
+  };
+
+  return { IsRegistered, getUserProfile };
 };

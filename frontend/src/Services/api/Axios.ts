@@ -1,11 +1,10 @@
 import axios from "axios";
-
-console.log("Env variables:", process.env);
+import { classifyError } from "@/utils/errorHandling";
 
 // Base API configuration
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_URL_SERVER || "http://localhost:4000/api/v1", // Base URL for all API requests
-  timeout: 10000, // Request timeout
+  timeout: 15000, // Increased timeout to 15 seconds
   headers: {
     "Content-Type": "application/json", // Default content type
   },
@@ -25,12 +24,24 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor (e.g., for handling errors globally)
+// Response interceptor with enhanced error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error("API Error:", error.response || error.message);
-    return Promise.reject(error);
+    // Classify the error for better handling
+    const classifiedError = classifyError(error);
+    
+    // Log detailed error information for debugging
+    console.error("API Error Details:", {
+      type: classifiedError.type,
+      message: classifiedError.message,
+      statusCode: classifiedError.statusCode,
+      retryable: classifiedError.retryable,
+      originalError: error.response || error.message
+    });
+    
+    // Return the classified error for better handling upstream
+    return Promise.reject(classifiedError);
   }
 );
 

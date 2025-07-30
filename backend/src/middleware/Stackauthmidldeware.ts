@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { User } from "@stackframe/stack";
-import { stackServerApp } from "../stack/server";
+import { Request, Response, NextFunction } from 'express';
+import { User } from '@stackframe/stack';
+import { stackServerApp } from '../stack/server';
 
 // Extend Express Request type
 declare global {
@@ -23,31 +23,34 @@ export class AuthMiddleware {
     next: NextFunction
   ) => {
     try {
+      const accessToken = req.headers['accesstoken'] as string;
+      const RefreshToken = req.headers['x-refresh-token'] as string;
 
-      const accessToken = req.headers["accesstoken"] as string;
-      const RefreshToken = req.headers["x-refresh-token"] as string;
-
-      console.log("accessToken :", accessToken, "RefreshToken : ", RefreshToken);
-
-
+      console.log(
+        'accessToken :',
+        accessToken,
+        'RefreshToken : ',
+        RefreshToken
+      );
 
       if (!accessToken) {
         res.status(401).json({
           success: false,
-          error: "Authentication token missing",
-          code: "MISSING_TOKEN",
+          error: 'Authentication token missing',
+          code: 'MISSING_TOKEN',
         });
         return;
       }
 
       // 2. Validate token and get user
       const user = await this.validateToken(accessToken, RefreshToken);
+      console.log('user :', user);
 
       if (!user) {
         res.status(401).json({
           success: false,
-          error: "Invalid authentication token",
-          code: "INVALID_TOKEN",
+          error: 'Invalid authentication token',
+          code: 'INVALID_TOKEN',
         });
         return;
       }
@@ -56,8 +59,8 @@ export class AuthMiddleware {
       if (!user.primaryEmailVerified) {
         res.status(403).json({
           success: false,
-          error: "Email verification required",
-          code: "EMAIL_NOT_VERIFIED",
+          error: 'Email verification required',
+          code: 'EMAIL_NOT_VERIFIED',
         });
         return;
       }
@@ -83,8 +86,9 @@ export class AuthMiddleware {
       return await this.stackServerApp.getUser({
         tokenStore: { accessToken: accessToken, refreshToken: refreshToken },
       });
+
     } catch (error) {
-      console.error("Token validation failed:", error);
+      console.log('Token validation failed:', error);
       return null;
     }
   }
@@ -93,15 +97,15 @@ export class AuthMiddleware {
    * Centralized error handler
    */
   private handleError(error: any, res: Response) {
-    console.error("Authentication error:", error);
+    console.error('Authentication error:', error);
 
     // Generic error response in production
-    const isDev = process.env.NODE_ENV === "development";
+    const isDev = process.env.NODE_ENV === 'development';
 
     res.status(500).json({
       success: false,
-      error: "Authentication failed",
-      code: "AUTHENTICATION_ERROR",
+      error: 'Authentication failed',
+      code: 'AUTHENTICATION_ERROR',
       details: isDev ? error.message : undefined,
     });
     return;
@@ -117,8 +121,8 @@ export class AuthMiddleware {
     res: Response,
     next: NextFunction
   ) {
-    const accessToken = req.headers["AccessToken"] as string;
-    const RefreshToken = req.headers["X-Refresh-Token"] as string;
+    const accessToken = req.headers['AccessToken'] as string;
+    const RefreshToken = req.headers['X-Refresh-Token'] as string;
 
     if (!accessToken) {
       next();

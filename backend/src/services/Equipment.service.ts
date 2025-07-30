@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { Equipment, IEquipment } from "../models/Equipment";
-import { Error } from "mongoose";
-import { promise } from "zod";
+import { Request, Response } from 'express';
+import { Equipment, IEquipment } from '../models/Equipment';
+import { Error } from 'mongoose';
+import { promise } from 'zod';
 
 export const createEquipment = async (
   req: Request,
@@ -15,11 +15,11 @@ export const createEquipment = async (
       !equipmentData.description
     ) {
       res.status(400).json({
-        error: "Name, category, and description are required fields.",
+        error: 'Name, category, and description are required fields.',
       });
     }
     const existingEquipment = await Equipment.findOne({
-      name: { $regex: new RegExp(`^${equipmentData.name}$`, "i") },
+      name: { $regex: new RegExp(`^${equipmentData.name}$`, 'i') },
     });
     if (existingEquipment) {
       throw new Error(
@@ -31,8 +31,8 @@ export const createEquipment = async (
     await equipment.save();
     res.status(201).json(equipment);
   } catch (error) {
-    console.error("Error creating equipment:", error);
-    throw new Error("Failed to create equipment");
+    console.error('Error creating equipment:', error);
+    throw new Error('Failed to create equipment');
   }
 };
 export const getEquipment = async (
@@ -42,7 +42,7 @@ export const getEquipment = async (
   try {
     const equipment = await Equipment.find();
     if (!equipment) {
-      res.status(404).json({ message: "Equipment not found" });
+      res.status(404).json({ message: 'Equipment not found' });
       return;
     }
     res.status(200).json(equipment);
@@ -50,7 +50,7 @@ export const getEquipment = async (
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
     } else {
-      res.status(500).json({ error: "Internal server error" });
+      res.status(500).json({ error: 'Internal server error' });
     }
   }
 };
@@ -61,9 +61,9 @@ export const deleteEquipment = async (
   try {
     const equipment = await Equipment.findByIdAndDelete(req.params.id);
     if (!equipment) {
-      res.status(404).json({ message: "Equipment not found" });
+      res.status(404).json({ message: 'Equipment not found' });
     }
-    res.status(200).json({ message: "Equipment deleted successfully" });
+    res.status(200).json({ message: 'Equipment deleted successfully' });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
@@ -82,7 +82,7 @@ export const updateEquipment = async (
       { new: true }
     );
     if (!updatedEquipment) {
-      res.status(404).json({ message: "Equipment not found" });
+      res.status(404).json({ message: 'Equipment not found' });
     }
     res.status(200).json(updatedEquipment);
   } catch (error: unknown) {
@@ -102,7 +102,7 @@ export const createMultiple = async (
     // Validate that request body is an array
     if (!Array.isArray(equipmentArray)) {
       res.status(400).json({
-        error: "Request body must be an array of equipment items",
+        error: 'Request body must be an array of equipment items',
       });
       return;
     }
@@ -119,7 +119,7 @@ export const createMultiple = async (
     });
   } catch (error: any) {
     res.status(500).json({
-      error: "Internal server error",
+      error: 'Internal server error',
       message: error.message,
     });
   }
@@ -135,7 +135,7 @@ export const dropallEquipment = async (
       message: `${result.deletedCount} equipment items deleted successfully`,
     });
   } catch (error) {
-    console.error("Error deleting all equipment:", error);
-    res.status(500).json({ error: "Failed to delete all equipment" });
+    console.error('Error deleting all equipment:', error);
+    res.status(500).json({ error: 'Failed to delete all equipment' });
   }
 };
