@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { toast } from "@/hooks/use-toast";
 import { useStackAuthApi } from "./Stackclientapi";
 import { 

@@ -32,7 +32,6 @@ export type UserResponse = {
 
 const FitnessDashboard = () => {
   const [activeTab, setActiveTab] = useState("week");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const {
     data: user,
     isLoading,

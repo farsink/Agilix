@@ -2,6 +2,7 @@ import React from "react";
 import { Exercise2 } from "@/types/workout";
 import { Timer } from "lucide-react";
 import { mapImages } from "../data/WorkoutImages";
+import Image from "next/image";
 
 interface WorkoutCardProps {
   workout: Exercise2;
@@ -34,7 +35,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
   return (
     <div className='bg-white rounded-[24px] shadow-lg overflow-hidden h-64 relative animate-scale-in'>
       <div className='w-full h-full relative'>
-        <img
+        <Image
           width={100}
           height={100}
           src={mapImages(workout)}

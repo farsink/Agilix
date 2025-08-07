@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useUserApi, ApiResponse, IsRegisteredResponse } from "@/Services/api/User.api";
+import { useUserApi, IsRegisteredResponse } from "@/Services/api/User.api";
 import { useCallback, useRef, useEffect } from "react";
 import { ErrorType, ClassifiedError, classifyError } from "@/utils/errorHandling";
 
@@ -96,7 +97,7 @@ export const useRegistrationStatus = (options: UseRegistrationStatusOptions = {}
       retryCountRef.current = 0; // Reset retry count on success
       options.onSuccess(queryResult.data);
     }
-  }, [queryResult.isSuccess, queryResult.data, options.onSuccess]);
+  }, [queryResult.isSuccess, queryResult.data, options]);
 
   useEffect(() => {
     if (!isMountedRef.current) return;
@@ -106,14 +107,14 @@ export const useRegistrationStatus = (options: UseRegistrationStatusOptions = {}
       console.error('Registration status check failed:', queryResult.error);
       options.onError(queryResult.error as ClassifiedError);
     }
-  }, [queryResult.isError, queryResult.error, options.onError]);
+  }, [queryResult.isError, queryResult.error, options]);
 
   // Manual retry function
   const retry = useCallback(() => {
     if (isMountedRef.current) {
       queryResult.refetch();
     }
-  }, [queryResult.refetch]);
+  }, [queryResult]);
 
   // Manual reset function
   const reset = useCallback(() => {

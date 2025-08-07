@@ -11,6 +11,7 @@ import TriangleLoader from "@/app/Components/Loader";
 import { Exercise2 } from "@/types/workout";
 import { mapImages } from "../data/WorkoutImages";
 import { mapWorkoutDescription } from "../data/WorkoutDescription";
+import Image from "next/image";
 
 const workoutData = {
   title: "Lower Body Training",
@@ -111,7 +112,9 @@ const Index = () => {
           </header>
 
           <div className='relative rounded-2xl overflow-hidden shadow-lg'>
-            <img
+            <Image
+              width={100}
+              height={100}
               src={mapImages(
                 Exercises[Math.floor(Math.random() * Exercises.length)]
               )}
@@ -158,7 +161,9 @@ const Index = () => {
                   className='bg-card p-4 rounded-xl flex items-center justify-between shadow-sm transition-transform duration-200 hover:scale-[1.02] hover:shadow-md'
                 >
                   <div className='flex items-center gap-4'>
-                    <img
+                    <Image
+                      width={100}
+                      height={100}
                       src={mapImages(round)}
                       alt={round.name}
                       className='w-16 h-16 object-cover rounded-lg'

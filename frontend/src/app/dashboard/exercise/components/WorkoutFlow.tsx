@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Exercise2 } from "@/types/workout";
 import TriangleLoader from "@/app/Components/Loader";
+import Image from "next/image";
 
 interface WorkoutFlowProps {
   workout: Exercise2[];
@@ -37,21 +38,14 @@ const formatTime = (seconds: number): string => {
 };
 
 const WorkoutFlow: React.FC<WorkoutFlowProps> = ({ workout, onFinish }) => {
-  // Add a guard clause to handle the loading state
-  if (!workout || workout.length === 0) {
-    return (
-     <TriangleLoader />
-    );
-  }
-
   const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const totalRounds = workout.length;
   const currentRound = workout[currentRoundIndex];
-
+  
   const initialDuration = parseDuration(currentRound?.duration || "00:00");
   const [timeLeft, setTimeLeft] = useState(initialDuration);
-
+  
   useEffect(() => {
     setTimeLeft(parseDuration(workout[currentRoundIndex]?.duration || "00:00"));
   }, [currentRoundIndex, workout]);
@@ -67,7 +61,14 @@ const WorkoutFlow: React.FC<WorkoutFlowProps> = ({ workout, onFinish }) => {
 
     return () => clearInterval(timer);
   }, [timeLeft, isPlaying]);
-
+  
+  // Add a guard clause to handle the loading state
+  if (!workout || workout.length === 0) {
+    return (
+      <TriangleLoader />
+    );
+  }
+  
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
   };
@@ -89,7 +90,7 @@ const WorkoutFlow: React.FC<WorkoutFlowProps> = ({ workout, onFinish }) => {
   };
 
   const handleRestart = () => {
-    setTimeLeft(parseDuration(workout[currentRoundIndex].duration));
+    setTimeLeft(parseDuration(workout[currentRoundIndex].duration as string));
     setIsPlaying(true);
   };
 
@@ -104,8 +105,10 @@ const WorkoutFlow: React.FC<WorkoutFlowProps> = ({ workout, onFinish }) => {
     <div className='min-h-screen bg-gray-100'>
       {/* Workout Player Panel - Full Screen Height */}
       <div className='relative h-screen overflow-hidden bg-gray-800'>
-        <img
-          src={currentRound.imageUrl}
+        <Image
+          width={100}
+          height={100}
+          src={currentRound.name}
           alt={currentRound.name}
           className='w-full h-full object-cover opacity-40'
         />

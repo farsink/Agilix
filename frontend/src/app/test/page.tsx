@@ -1,9 +1,7 @@
 "use client";
 import { useUserProfile } from "@/hooks/useUser";
-import { useStackAuthApi } from "@/Services/api/Stackclientapi";
 import React from "react";
 import { UserResponse } from "../dashboard/page";
-import { Exercise2 } from "@/types/workout";
 
 const Test: React.FC = () => {
   const { data: user } = useUserProfile() as {
