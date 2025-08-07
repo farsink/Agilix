@@ -4,6 +4,7 @@ import { stackServerApp } from "../stack";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "../providers/tanstackQuery";
+import ErrorBoundary from "./Components/common/errorboundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,7 +52,7 @@ export default function RootLayout({
       >
         <StackProvider app={stackServerApp}>
           <Providers>
-            <StackTheme>{children}</StackTheme>
+            <ErrorBoundary><StackTheme>{children}</StackTheme></ErrorBoundary>
           </Providers>
         </StackProvider>
       </body>

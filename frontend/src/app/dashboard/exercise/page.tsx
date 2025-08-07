@@ -70,7 +70,7 @@ const Index = () => {
       new Date().toLocaleString("en-US", { weekday: "long" }).toLowerCase()
   );
   const Exercises: Exercise2[] = getCurrentDayWorkoutExercises();
-  console.log(Exercises);
+  console.log("Exercises list to workout-flow :", Exercises);
 
 
   if (isWorkoutStarted) {

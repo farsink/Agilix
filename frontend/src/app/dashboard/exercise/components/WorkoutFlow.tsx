@@ -16,6 +16,7 @@ import {
   Clock,
 } from "lucide-react";
 import { Exercise2 } from "@/types/workout";
+import TriangleLoader from "@/app/Components/Loader";
 
 interface WorkoutFlowProps {
   workout: Exercise2[];
@@ -36,16 +37,23 @@ const formatTime = (seconds: number): string => {
 };
 
 const WorkoutFlow: React.FC<WorkoutFlowProps> = ({ workout, onFinish }) => {
+  // Add a guard clause to handle the loading state
+  if (!workout || workout.length === 0) {
+    return (
+     <TriangleLoader />
+    );
+  }
+
   const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const totalRounds = workout.length || 2;
+  const totalRounds = workout.length;
   const currentRound = workout[currentRoundIndex];
 
   const initialDuration = parseDuration(currentRound?.duration || "00:00");
   const [timeLeft, setTimeLeft] = useState(initialDuration);
 
   useEffect(() => {
-    setTimeLeft(parseDuration(workout[currentRoundIndex].duration || "00:00"));
+    setTimeLeft(parseDuration(workout[currentRoundIndex]?.duration || "00:00"));
   }, [currentRoundIndex, workout]);
 
   useEffect(() => {
@@ -81,7 +89,7 @@ const WorkoutFlow: React.FC<WorkoutFlowProps> = ({ workout, onFinish }) => {
   };
 
   const handleRestart = () => {
-    setTimeLeft(parseDuration(workout.rounds[currentRoundIndex].duration));
+    setTimeLeft(parseDuration(workout[currentRoundIndex].duration));
     setIsPlaying(true);
   };
 
@@ -225,7 +233,7 @@ const WorkoutFlow: React.FC<WorkoutFlowProps> = ({ workout, onFinish }) => {
             </h3>
           </div>
           <div className='divide-y divide-gray-100'>
-            {workout.rounds.map((round, index) => (
+            {workout.map((round, index) => (
               <div
                 key={index}
                 className='p-4 flex items-center justify-between'

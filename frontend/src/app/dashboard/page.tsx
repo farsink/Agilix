@@ -56,7 +56,7 @@ const FitnessDashboard = () => {
   const TodayExercise = user
     ? UserMetrics.TodayExercise(user.data as IUserInfo)
     : [];
-  console.log(TodayExercise);
+  // console.log(TodayExercise);
 
   let message = "";
   switch (level) {
@@ -283,7 +283,7 @@ const FitnessDashboard = () => {
               <div className='space-y-4'>
                 {TodayExercise?.length > 0 ? (
                   TodayExercise?.map((exercise, index) => (
-                    <>
+                    
                       <div
                         className='flex items-center justify-between'
                         key={index}
@@ -303,7 +303,6 @@ const FitnessDashboard = () => {
                           {exercise?.sets}x{exercise?.reps}
                         </p>
                       </div>
-                    </>
                   ))
                 ) : (
                   <div className='flex items-center gap-3'>

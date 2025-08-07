@@ -30,7 +30,7 @@ export class UserMetrics {
     const workout = userProfile?.WorkoutPlan?.weeklySchedule?.find(
       (w) => w.day === day
     );
-    console.log(workout?.exercises);
+    // console.log(workout?.exercises);
     return workout?.exercises ?? [];
   }
 }
